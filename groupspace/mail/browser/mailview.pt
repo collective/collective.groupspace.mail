@@ -1,0 +1,156 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      lang="en"
+      metal:use-macro="here/main_template/macros/master"
+      i18n:domain="groupspace.mail">
+<body>
+
+<div metal:fill-slot="main">
+
+<tal:main-macro metal:define-macro="main"
+     tal:define="role python:request.get('role','');
+                 user python:request.get('user','');
+                 group python:request.get('group','');
+                 email python:member.getProperty('email','');
+                 mails python:view.get_mails(role=role, user=user, group=group)">
+
+  <div tal:condition="python:not mails">
+
+    <h1 i18n:translate="send_an_email">Send an email to the group</h1>
+
+    <strong class="formHelp" 
+         i18n:translate="no_emails_found">No emails found for
+    <span tal:condition="user">
+        <span i18n:translate="">user</span>
+        <span tal:content="user" />
+    </span>
+    <span tal:condition="group">
+        <span i18n:translate="">group</span>
+        <span tal:content="group" />
+    </span>
+    <span tal:condition="role">
+        <span i18n:translate="">Role</span>
+        <span tal:content="role" />
+    </span>    
+    <span tal:condition="python:not user and not group and not role">
+        <span i18n:translate="">Groupspace</span>: 
+        <span tal:content="here/Title" />
+    </span>  
+    !    
+    </strong>
+  </div>   
+
+  <div tal:condition="python:not email">
+    <strong i18n:translate="no_email_in_preferences">You need to set your email address in the preferences in order to send messages.</strong>
+  </div>  
+  
+  <form class="group"
+        name="edit_form" 
+        action="" 
+        method="post"
+        enctype="multipart/form-data"
+        tal:condition="python:mails and email"
+        tal:attributes="action template/getId">
+
+    <h1 i18n:translate="send_an_email">Send an email to the group</h1>
+   
+    <fieldset>        
+	        <!-- Mail Subject -->
+          <div class="field">
+            <label i18n:translate="label_subject">Subject</label>
+            <div class="formHelp" i18n:translate="help_subject">
+              The message subject
+            </div>            
+            <div class="field">               
+                <input type="text"
+                       name="subject"
+                       size="40"
+                       tal:attributes="value python:request.get('subject','')" />
+            </div>
+          </div>
+
+
+	        <!-- Mail Body -->
+          <div class="field">
+            <label i18n:translate="label_message">Message</label>
+
+            <div class="formHelp" i18n:translate="help_message_text">
+              The message text.
+            </div>
+
+            <textarea cols="80"
+                      rows="5"
+                      tabindex=""
+                      name="body"
+                      tal:attributes="tabindex tabindex/next;"
+                      tal:content="python:request.get('body','')">body</textarea>
+          </div>
+
+
+	    <!-- Mail From -->
+        <div class="field">
+            <label i18n:translate="label_from">From : </label>
+            <input type="hidden" name="mfrom" size="32" tal:attributes="value email"/>
+            <span tal:content="email">Your email</span>
+        </div>
+
+	    <!-- Recipients -->
+        <div class="field">
+            <label i18n:translate="label_send_to">This mail is sent to</label>             
+                <tal:block repeat="listEmail mails/items">
+                  <div style="white-space:nowrap">
+                    <input type="checkbox" name="bcc:list" checked
+                           tal:attributes="value python:listEmail[1]">
+                    <span tal:content="python:listEmail[0]" />
+                  </div>
+                </tal:block>
+        </div>
+
+
+        <div class="row">
+            <div class="label" i18n:translate="label_attachment">Attachment</div>
+            <div class="field">               
+                <input name="attachments:list" type="file">
+            </div>
+            <div class="field">               
+                <input name="attachments:list" type="file">
+            </div>
+        </div>
+
+
+          <div class="formControls">
+
+            <input class="context"
+                   tabindex=""
+                   type="submit"
+                   name="form.button.Send"
+                   value="Send"
+                   i18n:attributes="value"
+                   tal:attributes="tabindex tabindex/next;"
+                   />
+
+            <input class="context"
+                   tabindex=""
+                   type="submit"
+                   name="form.button.Cancel"
+                   value="Cancel"
+                   i18n:domain="plone"
+                   i18n:attributes="value"
+                   tal:attributes="tabindex tabindex/next;" />
+
+          </div>
+
+    </fieldset>     
+    <input type="hidden" name="role" tal:attributes="value role" />
+    <input type="hidden" name="user" tal:attributes="value user" />
+    <input type="hidden" name="group" tal:attributes="value group" />
+    <input type="hidden" name="form.submitted" value="1" />
+  </form>
+
+
+</tal:main-macro>
+
+</div>
+
+</body>
+
+</html>
