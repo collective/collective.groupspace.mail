@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from setuptools import setup, find_packages
 import os
 
@@ -16,7 +15,7 @@ setup(name='groupspace.mail',
         "Topic :: Software Development :: Libraries :: Python Modules",
         ],
       keywords='',
-      author='Maik Röder',
+      author='Maik Roeder',
       author_email='roeder@berg.net',
       url='http://svn.plone.org/svn/collective/groupspace.mail',
       license='GPL',
