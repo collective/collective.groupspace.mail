@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<rolemap>
+  <permissions>
+    <permission name="GrufSpaces: Send Mail to GroupSpace Members"
+                acquire="True">
+      <role name="Manager"/>
+      <role name="Owner"/>
+      <role name="GroupAdmin"/>
+      <role name="GroupEditor"/>
+      <role name="GroupContributor"/>
+    </permission>
+  </permissions>
+</rolemap>
+
