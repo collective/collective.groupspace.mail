@@ -5,6 +5,7 @@
     i18n_domain="groupspace.mail">
 
     <include package=".browser" />
+    <include package=".portlets" />
 
     <permission
         id="grufspaces.SendMailToGroupSpaceMembers"

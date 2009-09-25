@@ -1,0 +1,19 @@
+<dl class="portlet portletNews"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:tal="http://xml.zope.org/namespaces/tal"
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    i18n:domain="groupspace.mail">
+
+    <dt class="portletHeader">
+        <span class="portletTopLeft"></span>
+        <span class="tile"
+              i18n:translate="box_group_mail">Group Mail</span>
+        <span class="portletTopRight"></span>
+    </dt>
+
+    <dd class="portletFooter">
+        <span class="portletBottomLeft"></span>
+        <span class="portletBottomRight"></span>
+    </dd>
+
+</dl>
