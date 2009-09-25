@@ -85,13 +85,13 @@ class mailView(BrowserView):
 
         if user:
             userssource = UsersSource(context)
-            user = userssource.get(user_id)
+            user = userssource.get(user)
             user_mail = user.getProperty('email', None)
             if user_mail:
                 emails={user:user_mail}
         elif group:
             groupssource = GroupsSource(context)
-            group = groupssource.get(group_id)
+            group = groupssource.get(group)
             for member in group.getGroupMembers():
                 user_name=member.getId()
                 user_mail = user.getProperty('email', None)

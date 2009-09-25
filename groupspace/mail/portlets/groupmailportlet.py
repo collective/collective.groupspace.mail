@@ -1,5 +1,6 @@
 from zope.interface import Interface
 from zope.interface import implements
+from zope.interface import directlyProvides
 
 from plone.app.portlets.portlets import base
 from plone.portlets.interfaces import IPortletDataProvider
@@ -13,6 +14,7 @@ from Products.CMFCore.utils import getToolByName
 from groupspace.mail import mailMessageFactory as _
 
 from Acquisition import aq_inner
+from Acquisition import aq_parent
 
 from plone.memoize.compress import xhtml_compress
 from plone.memoize import ram
@@ -21,6 +23,13 @@ from plone.app.portlets.cache import render_cachekey
 
 from zope.component import queryAdapter
 from plone.portlets.interfaces import IPortletContext
+
+from zope.component import getUtilitiesFor
+
+from Products.GrufSpaces.interface import IRolesPageRole
+from groupspace.roles.interfaces import ILocalGroupSpacePASRoles
+
+from zope.component import getMultiAdapter
 
 class IGroupMailPortlet(IPortletDataProvider):
     """A portlet
@@ -76,28 +85,47 @@ class Renderer(base.Renderer):
     of this class. Other methods can be added and referenced in the template.
     """
 
-    _template = ViewPageTemplateFile('groupmailportlet.pt')
+    render = ViewPageTemplateFile('groupmailportlet.pt')
 
     def __init__(self, *args):
         base.Renderer.__init__(self, *args)
         context = aq_inner(self.context)
+        self.membership = getToolByName(self.context, 'portal_membership')
 
-    @ram.cache(render_cachekey)
-    def render(self):
-        return xhtml_compress(self._template())
+    @property
+    def mail_permission(self):
+        context = aq_inner(self.context)
+        permission = "GrufSpaces: Send Mail to GroupSpace Members"
+        return self.membership.checkPermission(permission, context)
 
     @property
     def available(self):
-        return len(self._data())
+        return self.mail_permission
 
     def group_mail(self):
-        return self._data()
+        context = aq_inner(self.context)
+        return self.roles()
 
     @memoize
-    def _data(self):
+    def roles(self):
         context = aq_inner(self.context)
-        return []
+        groupspace = self._get_groupspace(context)
+        view = getMultiAdapter((groupspace, self.request), name='roles')
+        return view.existing_role_settings()
 
+    def _get_groupspace(self, object):
+        for obj in self._parent_chain(object):
+            if  ILocalGroupSpacePASRoles.providedBy(obj):
+                return obj
+
+    def _parent_chain(self, obj):
+        """Iterate over the containment chain"""
+        while obj is not None:
+            yield obj
+            new = aq_parent(aq_inner(obj))
+            # if the obj is a method we get the class
+            obj = getattr(obj, 'im_self', new)
+            
 # NOTE: If this portlet does not have any configurable parameters, you can
 # inherit from NullAddForm and remove the form_fields variable.
 

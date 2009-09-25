@@ -11,6 +11,18 @@
         <span class="portletTopRight"></span>
     </dt>
 
+    <tal:groupspaces tal:repeat="principal view/group_mail">
+    <dd tal:define="oddrow repeat/principal/odd;"
+        tal:attributes="class python:oddrow and 'portletItem even' or 'portletItem odd'">
+        <a href=""
+           class="tile"
+           tal:attributes="href python:'mail?' + principal['type'] + '=' + principal['id'];"
+           tal:content="principal/title">
+           sampleparticipant
+        </a>
+    </dd>
+    </tal:groupspaces>
+
     <dd class="portletFooter">
         <span class="portletBottomLeft"></span>
         <span class="portletBottomRight"></span>
