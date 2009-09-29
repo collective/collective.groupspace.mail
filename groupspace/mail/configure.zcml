@@ -12,6 +12,10 @@
         title="GrufSpaces: Send Mail to GroupSpace Members"
         />
 
+    <subscriber for="groupspace.roles.interfaces.ILocalGroupSpacePASRoles
+                     groupspace.roles.interfaces.ILocalGroupSpacePASRolesChangeEvent"
+                handler="groupspace.mail.roles.notifyChange"/>
+
     <!-- Register the installation GenericSetup extension profile -->
     <genericsetup:registerProfile
         name="default"
