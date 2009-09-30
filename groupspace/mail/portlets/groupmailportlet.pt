@@ -8,7 +8,7 @@
         <span class="portletTopLeft"></span>
         <a class="tile"
            href=""
-           tal:attributes="href python:'mail'"
+           tal:attributes="href string:@@mail"
            i18n:translate="box_group_mail">
             <img src="mail_icon.gif"
                  alt=""/>
@@ -22,7 +22,7 @@
         tal:attributes="class python:oddrow and 'portletItem even' or 'portletItem odd'">
         <a href=""
            class="tile"
-           tal:attributes="href python:'mail?' + principal['type'] + '=' + principal['id'];">
+           tal:attributes="href python:'@@mail?' + principal['type'] + '=' + principal['id'];">
             <img src=""
                  alt="" 
                  tal:attributes="src python:principal['type'] + '.gif'" />           
