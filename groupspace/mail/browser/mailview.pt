@@ -1,156 +1,142 @@
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
-      lang="en"
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       metal:use-macro="here/main_template/macros/master"
-      i18n:domain="groupspace.mail">
-<body>
+      i18n:domain="plone">
 
-<div metal:fill-slot="main">
+<metal:block fill-slot="top_slot"
+             tal:define="dummy python:request.set('disable_border',1)" />
 
-<tal:main-macro metal:define-macro="main"
-     tal:define="role python:request.get('role','');
-                 user python:request.get('user','');
-                 group python:request.get('group','');
-                 email python:member.getProperty('email','');
-                 mails python:view.get_mails(role=role, user=user, group=group)">
+  <metal:head fill-slot="head_slot">
+    <meta name="robots" content="noindex,follow" />
+  </metal:head>
 
-  <div tal:condition="python:not mails">
+  <body>
 
-    <h1 i18n:translate="send_an_email">Send an email to the group</h1>
+    <div metal:fill-slot="main"
+         tal:define="role python:request.get('role','');
+                     user python:request.get('user','');
+                     group python:request.get('group','');
+                     email python:member.getProperty('email','');
+                     mails python:view.get_mails(role=role, user=user, group=group)">
 
-    <strong class="formHelp" 
-         i18n:translate="no_emails_found">No emails found for
-    <span tal:condition="user">
-        <span i18n:translate="">user</span>
-        <span tal:content="user" />
-    </span>
-    <span tal:condition="group">
-        <span i18n:translate="">group</span>
-        <span tal:content="group" />
-    </span>
-    <span tal:condition="role">
-        <span i18n:translate="">Role</span>
-        <span tal:content="role" />
-    </span>    
-    <span tal:condition="python:not user and not group and not role">
-        <span i18n:translate="">Groupspace</span>: 
-        <span tal:content="here/Title" />
-    </span>  
-    !    
-    </strong>
-  </div>   
+      <h1 class="documentFirstHeading"
+          i18n:translate="heading_send_email_to_group">Send an email to the group</h1>
 
-  <div tal:condition="python:not email">
-    <strong i18n:translate="no_email_in_preferences">You need to set your email address in the preferences in order to send messages.</strong>
-  </div>  
-  
-  <form class="group"
-        name="edit_form" 
-        action="" 
-        method="post"
-        enctype="multipart/form-data"
-        tal:condition="python:mails and email"
-        tal:attributes="action template/getId">
+      <div tal:condition="python:not mails">
 
-    <h1 i18n:translate="send_an_email">Send an email to the group</h1>
-   
-    <fieldset>        
-	        <!-- Mail Subject -->
-          <div class="field">
-            <label i18n:translate="label_subject">Subject</label>
-            <div class="formHelp" i18n:translate="help_subject">
-              The message subject
-            </div>            
-            <div class="field">               
-                <input type="text"
-                       name="subject"
-                       size="40"
-                       tal:attributes="value python:request.get('subject','')" />
-            </div>
+      <strong class="formHelp" 
+              i18n:translate="no_emails_found">No email addresses found!    
+      </strong>
+
+      </div>
+
+      <div tal:condition="python:not email">
+          <strong class="formHelp" 
+                  i18n:translate="no_email_in_preferences">
+              You need to set your email address in the preferences in order to send messages.
+          </strong>
+      </div>  
+
+      <form name="mail_to_group_form"
+            class="enableAutoFocus"
+            action=""
+            method="post"
+            enctype="multipart/form-data"
+            tal:condition="python:mails and email"    
+            tal:attributes="action string:${context/absolute_url}/@@mail">
+
+        <fieldset>
+
+          <legend i18n:translate="legend_address_info">Address info</legend>
+
+          <div class="field"
+               tal:define="error errors/send_to_address|nothing;"
+               tal:attributes="class python:error and 'field error' or 'field'">
+
+            <label for="send_to_members" i18n:translate="label_send_to_members">Send to</label>
+
+            <span class="fieldRequired" title="Required"
+                  i18n:attributes="title title_required;"
+                  i18n:translate="label_required">(Required)</span>
+
+                  <div class="formHelp" i18n:translate="label_send_to_members">
+                     This mail is sent to the following members of the group
+                  </div>
+
+                  <div tal:content="error">Validation error output</div>
+
+
+                  <div class="field">
+                      <tal:block repeat="listEmail mails/items">
+                          <div style="white-space:nowrap">
+                              <input type="checkbox" name="bcc:list" checked
+                                     tal:attributes="value python:listEmail[1]">
+                              <span tal:content="python:listEmail[0]" />
+                          </div>
+                      </tal:block>
+                  </div>
+
           </div>
 
+          <div class="field"
+               tal:define="error errors/send_from_address|nothing;"
+               tal:attributes="class python:error and 'field error' or 'field'">
 
-	        <!-- Mail Body -->
+            <label for="send_from_address" i18n:translate="label_send_from">From</label>
+
+            <span class="fieldRequired" title="Required"
+                  i18n:attributes="title title_required;"
+                  i18n:translate="label_required">(Required)</span>
+
+                  <div class="formHelp" i18n:translate="help_send_from">
+                    Your email address.
+                  </div>
+
+                  <div tal:content="error">Validation error output</div>
+
+                  <input type="text"
+                         id="send_from_address"
+                         name="send_from_address"
+                         size="25"
+                         tal:attributes="value python: request.get('send_from_address', member.getProperty('email',''));"
+                         />
+          </div>
+
           <div class="field">
-            <label i18n:translate="label_message">Message</label>
+            <label for="comment" i18n:translate="label_comment">Comment</label>
 
-            <div class="formHelp" i18n:translate="help_message_text">
-              The message text.
+            <div class="formHelp" i18n:translate="help_comment_to_link">
+              A comment about this link.
             </div>
 
             <textarea cols="80"
                       rows="5"
-                      tabindex=""
-                      name="body"
-                      tal:attributes="tabindex tabindex/next;"
-                      tal:content="python:request.get('body','')">body</textarea>
+                      id="comment"
+                      name="comment"
+                      tal:content="request/comment | nothing"
+                      >
+              Comment
+            </textarea>
           </div>
 
-
-	    <!-- Mail From -->
-        <div class="field">
-            <label i18n:translate="label_from">From : </label>
-            <input type="hidden" name="mfrom" size="32" tal:attributes="value email"/>
-            <span tal:content="email">Your email</span>
-        </div>
-
-	    <!-- Recipients -->
-        <div class="field">
-            <label i18n:translate="label_send_to">This mail is sent to</label>             
-                <tal:block repeat="listEmail mails/items">
-                  <div style="white-space:nowrap">
-                    <input type="checkbox" name="bcc:list" checked
-                           tal:attributes="value python:listEmail[1]">
-                    <span tal:content="python:listEmail[0]" />
-                  </div>
-                </tal:block>
-        </div>
-
-
-        <div class="row">
-            <div class="label" i18n:translate="label_attachment">Attachment</div>
-            <div class="field">               
-                <input name="attachments:list" type="file">
-            </div>
-            <div class="field">               
-                <input name="attachments:list" type="file">
-            </div>
-        </div>
-
-
           <div class="formControls">
-
             <input class="context"
-                   tabindex=""
                    type="submit"
                    name="form.button.Send"
                    value="Send"
-                   i18n:attributes="value"
-                   tal:attributes="tabindex tabindex/next;"
+                   i18n:attributes="value label_send;"
                    />
-
-            <input class="context"
-                   tabindex=""
-                   type="submit"
-                   name="form.button.Cancel"
-                   value="Cancel"
-                   i18n:domain="plone"
-                   i18n:attributes="value"
-                   tal:attributes="tabindex tabindex/next;" />
-
           </div>
 
-    </fieldset>     
-    <input type="hidden" name="role" tal:attributes="value role" />
-    <input type="hidden" name="user" tal:attributes="value user" />
-    <input type="hidden" name="group" tal:attributes="value group" />
-    <input type="hidden" name="form.submitted" value="1" />
-  </form>
+          <input type="hidden" name="form.submitted" value="1" />
 
+        </fieldset>
 
-</tal:main-macro>
+      </form>
 
-</div>
+    </div>
 
-</body>
-
+  </body>
 </html>
