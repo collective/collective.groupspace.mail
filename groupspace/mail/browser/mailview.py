@@ -94,7 +94,7 @@ class mailView(BrowserView):
             group = groupssource.get(group)
             for member in group.getGroupMembers():
                 user_name=member.getId()
-                user_mail = user.getProperty('email', None)
+                user_mail = member.getProperty('email', None)
                 if user_mail:
                     emails[user_name]=user_mail
         else:
