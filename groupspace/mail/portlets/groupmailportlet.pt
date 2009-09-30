@@ -9,7 +9,11 @@
         <a class="tile"
            href=""
            tal:attributes="href python:'mail'"
-           i18n:translate="box_group_mail">Group Mail</a>
+           i18n:translate="box_group_mail">
+            <img src="mail_icon.gif"
+                 alt=""/>
+            Group Mail
+        </a>
         <span class="portletTopRight"></span>
     </dt>
 
@@ -18,9 +22,13 @@
         tal:attributes="class python:oddrow and 'portletItem even' or 'portletItem odd'">
         <a href=""
            class="tile"
-           tal:attributes="href python:'mail?' + principal['type'] + '=' + principal['id'];"
-           tal:content="principal/title">
-           sampleparticipant
+           tal:attributes="href python:'mail?' + principal['type'] + '=' + principal['id'];">
+            <img src=""
+                 alt="" 
+                 tal:attributes="src python:principal['type'] + '.gif'" />           
+            <span tal:content="principal/title">
+                sampleparticipant
+            </span>
         </a>
     </dd>
     </tal:groupspaces>
