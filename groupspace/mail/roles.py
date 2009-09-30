@@ -67,6 +67,7 @@ def _notifyChange(object, event):
                         notification[user_id] = {'old_roles':set(old_roles),
                                                  'new_roles':set(new_roles),
                                                  'email':email,
+                                                }
        
     site_props = getToolByName(object, 'portal_properties').site_properties
     encoding = site_props.getProperty('default_charset', 'UTF-8')
