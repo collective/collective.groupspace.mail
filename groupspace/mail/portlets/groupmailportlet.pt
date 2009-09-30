@@ -6,8 +6,10 @@
 
     <dt class="portletHeader">
         <span class="portletTopLeft"></span>
-        <span class="tile"
-              i18n:translate="box_group_mail">Group Mail</span>
+        <a class="tile"
+           href=""
+           tal:attributes="href python:'mail'"
+           i18n:translate="box_group_mail">Group Mail</a>
         <span class="portletTopRight"></span>
     </dt>
 
