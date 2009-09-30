@@ -12,7 +12,7 @@
            i18n:translate="box_group_mail">
             <img src="mail_icon.gif"
                  alt=""/>
-            Group Mail
+            Email to Group
         </a>
         <span class="portletTopRight"></span>
     </dt>
