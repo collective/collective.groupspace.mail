@@ -5,9 +5,6 @@
       metal:use-macro="here/main_template/macros/master"
       i18n:domain="plone">
 
-<metal:block fill-slot="top_slot"
-             tal:define="dummy python:request.set('disable_border',1)" />
-
   <metal:head fill-slot="head_slot">
     <meta name="robots" content="noindex,follow" />
   </metal:head>
@@ -52,7 +49,7 @@
           <legend i18n:translate="legend_address_info">Address info</legend>
 
           <div class="field"
-               tal:define="error errors/send_to_address|nothing;"
+               tal:define="error errors/send_to_members|nothing;"
                tal:attributes="class python:error and 'field error' or 'field'">
 
             <label for="send_to_members" i18n:translate="label_send_to_members">Send to</label>
@@ -69,11 +66,11 @@
 
 
                   <div class="field">
-                      <tal:block repeat="listEmail mails/items">
+                      <tal:block repeat="listEmail mails">
                           <div style="white-space:nowrap">
-                              <input type="checkbox" name="bcc:list" checked
-                                     tal:attributes="value python:listEmail[1]">
-                              <span tal:content="python:listEmail[0]" />
+                              <input type="checkbox" name="send_to_members:list" checked
+                                     tal:attributes="value python:listEmail[0]">
+                              <span tal:content="python:listEmail[1]" />
                           </div>
                       </tal:block>
                   </div>
@@ -120,6 +117,8 @@
               Comment
             </textarea>
           </div>
+
+          <span tal:replace="structure context/@@authenticator/authenticator"/>
 
           <div class="formControls">
             <input class="context"

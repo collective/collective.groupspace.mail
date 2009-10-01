@@ -5,11 +5,9 @@
   <!-- -*- extra stuff goes here -*- -->
 
   <browser:page
-      for="*"
       name="mail"
+      for="*"
       class=".mailview.mailView"
-      template="mailview.pt"
-      allowed_interface=".mailview.ImailView"
       permission="zope.Public"
       />
 
