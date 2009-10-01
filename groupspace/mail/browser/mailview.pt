@@ -49,7 +49,7 @@
           <legend i18n:translate="legend_address_info">Address info</legend>
 
           <div class="field"
-               tal:define="error errors/send_to_members|nothing;"
+               tal:define="error view/errors/send_to_members|nothing;"
                tal:attributes="class python:error and 'field error' or 'field'">
 
             <label for="send_to_members" i18n:translate="label_send_to_members">Send to</label>
@@ -70,7 +70,7 @@
                           <div style="white-space:nowrap">
                               <input type="checkbox" name="send_to_members:list" checked
                                      tal:attributes="value python:listEmail[0]">
-                              <span tal:content="python:listEmail[1]" />
+                              <span tal:content="python:listEmail[0] or listEmail[1]" />
                           </div>
                       </tal:block>
                   </div>
@@ -78,7 +78,7 @@
           </div>
 
           <div class="field"
-               tal:define="error errors/send_from_address|nothing;"
+               tal:define="error view/errors/send_from_address|nothing;"
                tal:attributes="class python:error and 'field error' or 'field'">
 
             <label for="send_from_address" i18n:translate="label_send_from">From</label>
@@ -101,20 +101,26 @@
                          />
           </div>
 
-          <div class="field">
-            <label for="comment" i18n:translate="label_comment">Comment</label>
+          <div class="field"
+               tal:define="error view/errors/message|nothing;"
+               tal:attributes="class python:error and 'field error' or 'field'">
 
-            <div class="formHelp" i18n:translate="help_comment_to_link">
-              A comment about this link.
+
+            <label for="message" i18n:translate="label_message">Message</label>
+
+            <div class="formHelp" i18n:translate="help_message">
+              The Email message.
             </div>
+
+            <div tal:content="error">Validation error output</div>
 
             <textarea cols="80"
                       rows="5"
-                      id="comment"
-                      name="comment"
-                      tal:content="request/comment | nothing"
+                      id="message"
+                      name="message"
+                      tal:content="request/message | nothing"
                       >
-              Comment
+              Message
             </textarea>
           </div>
 

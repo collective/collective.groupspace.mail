@@ -48,21 +48,26 @@ class mailView(BrowserView):
                 raise Forbidden
             send_to_members = form.get('send_to_members', [])
             send_from_address = form.get('send_from_address', [])
-            comment = form.get('comment', "")
+            message = form.get('message', "")
             
             proceed_to_send_mail = True
-            if not comment:
-                IStatusMessage(self.request).addStatusMessage(_(u"Please fill in a message."), type='error')
+            
+            self.errors = {}
+            
+            if not message:
+                self.errors['message'] = _(u"Please fill in a message.")
                 proceed_to_send_mail = False
             if not send_to_members:
-                IStatusMessage(self.request).addStatusMessage(_(u"Select at least one recipient."), type='error')
+                self.errors['send_to_members'] = _(u"Select at least one recipient.")
                 proceed_to_send_mail = False
             if not self.portal_registration.isValidEmail(send_from_address):
-                IStatusMessage(self.request).addStatusMessage(_(u"Please enter a valid email address."), type='error')              
+                self.errors['send_from_address'] = _(u"Please enter a valid email address.")              
                 proceed_to_send_mail = False
             
             if proceed_to_send_mail:
                 IStatusMessage(self.request).addStatusMessage(_(u"Emails sent."), type='info')
+            else:
+                IStatusMessage(self.request).addStatusMessage(_(u"Please correct the indicated errors."), type='error')
                 
         return self.template()
 
