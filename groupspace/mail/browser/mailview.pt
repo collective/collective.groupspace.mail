@@ -15,8 +15,9 @@
          tal:define="role python:request.get('role','');
                      user python:request.get('user','');
                      group python:request.get('group','');
-                     email python:member.getProperty('email','');
-                     mails python:view.get_mails(role=role, user=user, group=group)">
+                     email python:request.get('send_from_address', member.getProperty('email',''));
+                     mails python:view.get_mails(role=role, user=user, group=group);
+                     send_to_members python:request.get('send_to_members', [])">
 
       <h1 class="documentFirstHeading"
           i18n:translate="heading_send_email_to_group">Send an email to the group</h1>
@@ -64,13 +65,14 @@
 
                   <div tal:content="error">Validation error output</div>
 
-
                   <div class="field">
-                      <tal:block repeat="listEmail mails">
+                      <tal:block repeat="user_info mails">
                           <div style="white-space:nowrap">
-                              <input type="checkbox" name="send_to_members:list" checked
-                                     tal:attributes="value python:listEmail[0]">
-                              <span tal:content="python:listEmail[0] or listEmail[1]" />
+                              <input type="checkbox" 
+                                     name="send_to_members:list"
+                                     tal:attributes="value python:user_info[1];
+                                                     checked python:user_info[1] in send_to_members and 'checked' or not request.has_key('form.submitted') and 'checked' or None">
+                              <span tal:content="python:user_info[0] or user_info[1]" />
                           </div>
                       </tal:block>
                   </div>
@@ -97,7 +99,7 @@
                          id="send_from_address"
                          name="send_from_address"
                          size="25"
-                         tal:attributes="value python: request.get('send_from_address', member.getProperty('email',''));"
+                         tal:attributes="value email;"
                          />
           </div>
 
@@ -134,6 +136,10 @@
                    i18n:attributes="value label_send;"
                    />
           </div>
+
+          <input type="hidden" name="role" tal:attributes="value role" />
+          <input type="hidden" name="user" tal:attributes="value user" />
+          <input type="hidden" name="group" tal:attributes="value group" />
 
           <input type="hidden" name="form.submitted" value="1" />
 
