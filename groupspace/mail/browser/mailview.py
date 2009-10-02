@@ -29,6 +29,10 @@ class mailView(BrowserView):
     @property
     def portal_membership(self):
         return getToolByName(self.context, 'portal_membership')
+
+    @property
+    def site_properties(self):
+        return getToolByName(self.context, 'portal_properties').site_properties
     
     def __init__(self, context, request):
         self.context = context
@@ -65,6 +69,11 @@ class mailView(BrowserView):
                 proceed_to_send_mail = False
             
             if proceed_to_send_mail:
+                # Refetch all the user mails so no fake user ids can be injected
+                mails = self.get_mails(role=form.get('role',None),
+                                       user=form.get('user',None),
+                                       group=form.get('group', None))
+                self.send_mail(mails, send_from_address, send_to_members, message)
                 IStatusMessage(self.request).addStatusMessage(_(u"Emails sent."), type='info')
             else:
                 IStatusMessage(self.request).addStatusMessage(_(u"Please correct the indicated errors."), type='error')
@@ -184,3 +193,46 @@ class mailView(BrowserView):
         # Sort by user name
         result.sort()
         return result
+
+    def send_mail(self, mails, send_from_address, send_to_members, message):
+
+        context = aq_inner(self.context)
+
+        encoding = self.site_properties.getProperty('default_charset', 'UTF-8')
+                            
+        host = context.MailHost
+    
+        to_emails = []
+        for user_name, user_id, user_email in mails:
+            if user_id in send_to_members:
+                to_emails.append(user_email)
+                          
+        variables = {'content_title'  : context.Title(),
+                     'content_url'    : context.absolute_url(),
+                     'from_email'     : send_from_address,
+                     'to_emails'      : ','.join(to_emails),
+                     'default_charset': encoding,
+                     'message'        : message,
+                    }
+                          
+        mail_text = """To: %(to_emails)s
+From: %(from_email)s
+Errors-to: %(from_email)s
+Subject: Message to the group "%(content_title)s"
+Content-Type: text/plain; charset=%(default_charset)s
+Content-Transfer-Encoding: 8bit
+
+You have received a message from the group "%(content_title)s" located at 
+
+%(content_url)s
+
+%(message)s
+    """ % variables
+    
+        sent=1
+        try:
+            host.send(mail_text)
+        except:
+            sent=0
+        return sent       
+    
