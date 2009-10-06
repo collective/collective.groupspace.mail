@@ -186,7 +186,7 @@ class mailView(BrowserView):
                         user_mail = user_object.getProperty('email', None)
                         # Make sure the email address is valid
                         if user_mail and self.portal_registration.isValidEmail(user_mail):
-                            user_name = user.getProperty('fullname', None)
+                            user_name = user_object.getProperty('fullname', None)
                             emails[user] = [user_name, user, user_mail]
        
         result = emails.values()
@@ -207,9 +207,13 @@ class mailView(BrowserView):
             if user_id in send_to_members:
                 to_emails.append(user_email)
                           
+        member  = self.portal_membership.getAuthenticatedMember()
+        from_name = member.getProperty('fullname', member.getId())
+
         variables = {'content_title'  : context.Title(),
                      'content_url'    : context.absolute_url(),
                      'from_email'     : send_from_address,
+                     'from_name'      : from_name,
                      'to_emails'      : ','.join(to_emails),
                      'default_charset': encoding,
                      'message'        : message,
@@ -222,9 +226,17 @@ Subject: Message to the group "%(content_title)s"
 Content-Type: text/plain; charset=%(default_charset)s
 Content-Transfer-Encoding: 8bit
 
-You have received a message from the group "%(content_title)s" located at 
+The following message has been written by 
 
-%(content_url)s
+    %(from_name)s
+
+to the group 
+
+    %(content_title)s
+
+located at 
+
+    %(content_url)s
 
 %(message)s
     """ % variables
@@ -234,5 +246,6 @@ You have received a message from the group "%(content_title)s" located at
             host.send(mail_text)
         except:
             sent=0
+      
         return sent       
     
