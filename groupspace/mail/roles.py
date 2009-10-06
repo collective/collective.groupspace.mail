@@ -64,7 +64,7 @@ def _notifyChange(object, event):
                     # information
                     email = member.getProperty('email', None)
                     if email and registration.isValidEmail(email):
-                        notification[user_id] = {'old_roles':set(old_roles),
+                        notification[member_id] = {'old_roles':set(old_roles),
                                                  'new_roles':set(new_roles),
                                                  'email':email,
                                                 }
