@@ -14,7 +14,7 @@
 
     <subscriber for="groupspace.roles.interfaces.ILocalGroupSpacePASRoles
                      groupspace.roles.interfaces.ILocalGroupSpacePASRolesChangeEvent"
-                handler="groupspace.mail.roles.notifyChange"/>
+                handler="groupspace.mail.roles.notify_change"/>
 
     <!-- Register the installation GenericSetup extension profile -->
     <genericsetup:registerProfile

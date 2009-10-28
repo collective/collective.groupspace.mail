@@ -11,7 +11,7 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from Products.CMFCore.utils import getToolByName
 
-from groupspace.mail import mailMessageFactory as _
+from groupspace.mail import MAIL_MESSAGE_FACTORY as _
 
 from Acquisition import aq_inner
 from Acquisition import aq_parent

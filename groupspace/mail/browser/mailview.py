@@ -1,9 +1,9 @@
-from zope.interface import implements, Interface
+import sys
 
 from Products.Five import BrowserView
 from Products.CMFCore.utils import getToolByName
 
-from groupspace.mail import mailMessageFactory as _
+from groupspace.mail import MAIL_MESSAGE_FACTORY as _
 
 from plone.app.vocabularies.users import UsersSource
 from plone.app.vocabularies.groups import GroupsSource
@@ -15,8 +15,18 @@ from Products.GrufSpaces.interface import IRolesPageRole
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zExceptions import Forbidden
 from Products.statusmessages.interfaces import IStatusMessage
+from smtplib import SMTPException
 
-class mailView(BrowserView):
+from smtplib import SMTPServerDisconnected
+from smtplib import SMTPSenderRefused
+from smtplib import SMTPRecipientsRefused
+from smtplib import SMTPDataError
+from smtplib import SMTPConnectError
+from smtplib import SMTPHeloError
+from smtplib import SMTPAuthenticationError
+import socket
+
+class MailView(BrowserView):
     """
     mail browser view
     """
@@ -24,19 +34,29 @@ class mailView(BrowserView):
 
     @property
     def portal_registration(self):
+        """
+        Make portal_registration available as a property
+        """
         return getToolByName(self.context, 'portal_registration')
 
     @property
     def portal_membership(self):
+        """
+        Make portal_membership available as a property
+        """
         return getToolByName(self.context, 'portal_membership')
 
     @property
     def site_properties(self):
+        """
+        Make site_properties available as a property
+        """
         return getToolByName(self.context, 'portal_properties').site_properties
     
     def __init__(self, context, request):
         self.context = context
         self.request = request
+        self.errors = {}
 
     def __call__(self):
         """Send the email or render the page
@@ -47,7 +67,8 @@ class mailView(BrowserView):
         if submitted and send_button:
             if not self.request.get('REQUEST_METHOD','GET') == 'POST':
                 raise Forbidden
-            authenticator = self.context.restrictedTraverse('@@authenticator', None) 
+            authenticator = self.context.restrictedTraverse('@@authenticator', 
+                                                            None) 
             if not authenticator.verify(): 
                 raise Forbidden
             send_to_members = form.get('send_to_members', [])
@@ -55,28 +76,37 @@ class mailView(BrowserView):
             message = form.get('message', "")
             
             proceed_to_send_mail = True
-            
-            self.errors = {}
-            
+                        
             if not message:
-                self.errors['message'] = _(u"Please fill in a message.")
+                msg = _(u"Please fill in a message.")
+                self.errors['message'] = msg
                 proceed_to_send_mail = False
             if not send_to_members:
-                self.errors['send_to_members'] = _(u"Select at least one recipient.")
+                msg = _(u"Select at least one recipient.")
+                self.errors['send_to_members'] = msg
                 proceed_to_send_mail = False
             if not self.portal_registration.isValidEmail(send_from_address):
-                self.errors['send_from_address'] = _(u"Please enter a valid email address.")              
+                msg = _(u"Please enter a valid email address.")
+                self.errors['send_from_address'] = msg              
                 proceed_to_send_mail = False
             
+            status_message = IStatusMessage(self.request)
             if proceed_to_send_mail:
                 # Refetch all the user mails so no fake user ids can be injected
-                mails = self.get_mails(role=form.get('role',None),
-                                       user=form.get('user',None),
+                mails = self.get_mails(role=form.get('role', None),
+                                       user=form.get('user', None),
                                        group=form.get('group', None))
-                self.send_mail(mails, send_from_address, send_to_members, message)
-                IStatusMessage(self.request).addStatusMessage(_(u"Emails sent."), type='info')
+                success, msg = self.send(mails, 
+                                         send_from_address, 
+                                         send_to_members, 
+                                         message)
+                if success:
+                    status_message.addStatusMessage(msg, type='info')
+                else:
+                    status_message.addStatusMessage(msg, type='error')
             else:
-                IStatusMessage(self.request).addStatusMessage(_(u"Please correct the indicated errors."), type='error')
+                msg = _(u"Please correct the indicated errors.")
+                status_message.addStatusMessage(msg, type='error')
                 
         return self.template()
 
@@ -94,9 +124,11 @@ class mailView(BrowserView):
         
         pairs = []
         
+        check_permission = self.portal_membership.checkPermission
+
         for name, utility in getUtilitiesFor(IRolesPageRole):
             permission = utility.required_permission
-            if permission is None or self.portal_membership.checkPermission(permission, context):
+            if permission is None or check_permission(permission, context):
                 pairs.append(dict(id = name, title = utility.title))
                 
         pairs.sort(key=lambda x: x["id"])
@@ -109,42 +141,46 @@ class mailView(BrowserView):
 
         Returns unique emails of specific group members or groups
         """
-    
+        is_valid_email = self.portal_registration.isValidEmail
+ 
         context = aq_inner(self.context)
         
-        emails={}
+        emails = {}
      
         userssource = UsersSource(context)
         groupssource = GroupsSource(context)
 
-        if user and not context.user_roles is None and user in context.user_roles:
-            # Send mail to a specific user
-            # The user does really have a local role here
-            user_object = userssource.get(user)
-            user_mail = user_object.getProperty('email', None)
-            # Make sure the email address is valid
-            if user_mail and self.portal_registration.isValidEmail(user_mail):
-                user_name = user_object.getProperty('fullname', None)
-                emails[user] = [user_name, user, user_mail]
-            return emails.values()
+        if user:
+            if not context.user_roles is None and user in context.user_roles:
+                # Send mail to a specific user
+                # The user does really have a local role here
+                user_object = userssource.get(user)
+                user_mail = user_object.getProperty('email', None)
+                # Make sure the email address is valid
+                if user_mail and is_valid_email(user_mail):
+                    user_name = user_object.getProperty('fullname', None)
+                    emails[user] = [user_name, user, user_mail]
+                return emails.values()
             
-        if group and not context.group_roles is None and group in context.user_roles:
-            # Send mail to a specific group
-            # The user does really have a local role here
-            group_object = groupssource.get(group)
-            for user_object in group_object.getGroupMembers():
-                user = user_object.getId()
-                # No need to consider users twice
-                if not user in emails:
-                    user_mail = user_object.getProperty('email', None)
-                    # Make sure the email address is valid
-                    if user_mail and self.portal_registration.isValidEmail(user_mail):
-                        user_name = user_object.getProperty('fullname', None)
-                        emails[user] = [user_name, user, user_mail]
-            result = emails.values()
-            # Sort by user name
-            result.sort()
-            return result
+        if group:
+            if not context.group_roles is None and group in context.group_roles:
+                # Send mail to a specific group
+                # The user does really have a local role here
+                group_object = groupssource.get(group)
+                for user_object in group_object.getGroupMembers():
+                    user = user_object.getId()
+                    # No need to consider users twice
+                    if not user in emails:
+                        user_mail = user_object.getProperty('email', None)
+                        # Make sure the email address is valid
+                        if user_mail and is_valid_email(user_mail):
+                            user_name = user_object.getProperty('fullname', 
+                                                                None)
+                            emails[user] = [user_name, user, user_mail]
+                result = emails.values()
+                # Sort by user name
+                result.sort()
+                return result
  
         # From here on all users and groups are considered
 
@@ -156,7 +192,7 @@ class mailView(BrowserView):
         elif role:
             # Make sure the selected role is really existing
             if role in [r['id'] for r in self.roles()]:                    
-                groupspace_roles = set([role,])
+                groupspace_roles = set([role, ])
  
         # Collect all users from the groups having local roles
         if not context.group_roles is None:
@@ -171,9 +207,10 @@ class mailView(BrowserView):
                         if not user in emails:
                             user_mail = user_object.getProperty('email', None)
                             # Make sure the email address is valid
-                            if user_mail and self.portal_registration.isValidEmail(user_mail):
-                                    user_name = user_object.getProperty('fullname', None)
-                                    emails[user] = [user_name, user, user_mail]
+                            if user_mail and is_valid_email(user_mail):
+                                user_name = user_object.getProperty('fullname', 
+                                                                    None)
+                                emails[user] = [user_name, user, user_mail]
 
         # Collect all users having local roles
         if not context.user_roles is None:
@@ -185,8 +222,9 @@ class mailView(BrowserView):
                         user_object = userssource.get(user)        
                         user_mail = user_object.getProperty('email', None)
                         # Make sure the email address is valid
-                        if user_mail and self.portal_registration.isValidEmail(user_mail):
-                            user_name = user_object.getProperty('fullname', None)
+                        if user_mail and is_valid_email(user_mail):
+                            user_name = user_object.getProperty('fullname', 
+                                                                None)
                             emails[user] = [user_name, user, user_mail]
        
         result = emails.values()
@@ -194,7 +232,10 @@ class mailView(BrowserView):
         result.sort()
         return result
 
-    def send_mail(self, mails, send_from_address, send_to_members, message):
+    def send(self, mails, send_from_address, send_to_members, message):
+        """
+        Send the mail
+        """
 
         context = aq_inner(self.context)
 
@@ -241,11 +282,26 @@ located at
 %(message)s
     """ % variables
     
-        sent=1
         try:
             host.send(mail_text)
+        except SMTPServerDisconnected:
+            raise
+        except SMTPSenderRefused:
+            raise
+        except SMTPRecipientsRefused:
+            raise
+        except SMTPDataError:
+            raise
+        except SMTPConnectError:
+            raise
+        except SMTPHeloError:
+            raise
+        except SMTPAuthenticationError:
+            raise
+        except socket.error:
+            exc, e, tb = sys.exc_info()
+            return False, _(u"An error occurred while sending the email. %s" % str(e)) 
         except:
-            sent=0
-      
-        return sent       
-    
+            raise
+        return True, _(u"Emails sent.")
+                    

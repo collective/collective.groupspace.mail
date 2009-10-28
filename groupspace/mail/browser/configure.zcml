@@ -7,7 +7,7 @@
   <browser:page
       name="mail"
       for="*"
-      class=".mailview.mailView"
+      class=".mailview.MailView"
       permission="zope.Public"
       />
 
