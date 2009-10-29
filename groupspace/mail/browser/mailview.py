@@ -1,3 +1,6 @@
+"""
+View for sending mail to a groupspace
+"""
 import sys
 
 from Products.Five import BrowserView
@@ -15,8 +18,6 @@ from Products.GrufSpaces.interface import IRolesPageRole
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zExceptions import Forbidden
 from Products.statusmessages.interfaces import IStatusMessage
-from smtplib import SMTPException
-
 from smtplib import SMTPServerDisconnected
 from smtplib import SMTPSenderRefused
 from smtplib import SMTPRecipientsRefused
@@ -141,46 +142,17 @@ class MailView(BrowserView):
 
         Returns unique emails of specific group members or groups
         """
-        is_valid_email = self.portal_registration.isValidEmail
- 
-        context = aq_inner(self.context)
-        
-        emails = {}
-     
-        userssource = UsersSource(context)
-        groupssource = GroupsSource(context)
-
         if user:
-            if not context.user_roles is None and user in context.user_roles:
-                # Send mail to a specific user
-                # The user does really have a local role here
-                user_object = userssource.get(user)
-                user_mail = user_object.getProperty('email', None)
-                # Make sure the email address is valid
-                if user_mail and is_valid_email(user_mail):
-                    user_name = user_object.getProperty('fullname', None)
-                    emails[user] = [user_name, user, user_mail]
-                return emails.values()
+            return self.get_user_mails()
             
         if group:
-            if not context.group_roles is None and group in context.group_roles:
-                # Send mail to a specific group
-                # The user does really have a local role here
-                group_object = groupssource.get(group)
-                for user_object in group_object.getGroupMembers():
-                    user = user_object.getId()
-                    # No need to consider users twice
-                    if not user in emails:
-                        user_mail = user_object.getProperty('email', None)
-                        # Make sure the email address is valid
-                        if user_mail and is_valid_email(user_mail):
-                            user_name = user_object.getProperty('fullname', 
-                                                                None)
-                            emails[user] = [user_name, user, user_mail]
-                result = emails.values()
-                # Sort by user name
-                result.sort()
-                return result
+            return self._get_group_mails()
+
+        is_valid_email = self.portal_registration.isValidEmail 
+        context = aq_inner(self.context)        
+        emails = {}     
+        userssource = UsersSource(context)
+        groupssource = GroupsSource(context)
  
         # From here on all users and groups are considered
 
@@ -231,6 +203,53 @@ class MailView(BrowserView):
         # Sort by user name
         result.sort()
         return result
+
+    def _get_user_mails(self, user):
+        """
+        Get the user information if he has local roles
+        """
+        is_valid_email = self.portal_registration.isValidEmail
+        context = aq_inner(self.context)
+        emails = {}
+        userssource = UsersSource(context)
+        if not context.user_roles is None and user in context.user_roles:
+            # Send mail to a specific user
+            # The user does really have a local role here
+            user_object = userssource.get(user)
+            user_mail = user_object.getProperty('email', None)
+            # Make sure the email address is valid
+            if user_mail and is_valid_email(user_mail):
+                user_name = user_object.getProperty('fullname', None)
+                emails[user] = [user_name, user, user_mail]
+            return emails.values()
+
+    def _get_group_mails(self, user):
+        """
+        Get the information of the members of the group if the group 
+        has local roles.
+        """
+        is_valid_email = self.portal_registration.isValidEmail
+        context = aq_inner(self.context)
+        emails = {}
+        groupssource = GroupsSource(context)
+        if not context.group_roles is None and group in context.group_roles:
+            # Send mail to a specific group
+            # The user does really have a local role here
+            group_object = groupssource.get(group)
+            for user_object in group_object.getGroupMembers():
+                user = user_object.getId()
+                # No need to consider users twice
+                if not user in emails:
+                    user_mail = user_object.getProperty('email', None)
+                    # Make sure the email address is valid
+                    if user_mail and is_valid_email(user_mail):
+                        user_name = user_object.getProperty('fullname', 
+                                                            None)
+                        emails[user] = [user_name, user, user_mail]
+            result = emails.values()
+            # Sort by user name
+            result.sort()
+            return result
 
     def send(self, mails, send_from_address, send_to_members, message):
         """
@@ -284,21 +303,14 @@ located at
     
         try:
             host.send(mail_text)
-        except SMTPServerDisconnected:
-            raise
-        except SMTPSenderRefused:
-            raise
-        except SMTPRecipientsRefused:
-            raise
-        except SMTPDataError:
-            raise
-        except SMTPConnectError:
-            raise
-        except SMTPHeloError:
-            raise
-        except SMTPAuthenticationError:
-            raise
-        except socket.error:
+        except (SMTPServerDisconnected,
+                SMTPSenderRefused,
+                SMTPRecipientsRefused,
+                SMTPDataError,
+                SMTPConnectError,
+                SMTPHeloError,
+                SMTPAuthenticationError,
+                socket.error):
             exc, e, tb = sys.exc_info()
             return False, _(u"An error occurred while sending the email. %s" % str(e)) 
         except:
