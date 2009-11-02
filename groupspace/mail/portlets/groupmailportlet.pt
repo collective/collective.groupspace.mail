@@ -17,7 +17,7 @@
         <span class="portletTopRight"></span>
     </dt>
 
-    <tal:groupspaces tal:repeat="principal view/group_mail">
+    <tal:groupspaces tal:repeat="principal view/role_settings">
     <dd tal:define="oddrow repeat/principal/odd;"
         tal:attributes="class python:oddrow and 'portletItem even' or 'portletItem odd'">
         <a href=""

@@ -1,3 +1,7 @@
+"""
+A portlet for sending mails to users of a groupspace.
+"""
+
 from zope.interface import Interface
 from zope.interface import implements
 from zope.interface import directlyProvides
@@ -39,16 +43,6 @@ class IGroupMailPortlet(IPortletDataProvider):
     same.
     """
 
-    # TODO: Add any zope.schema fields here to capture portlet configuration
-    # information. Alternatively, if there are no settings, leave this as an
-    # empty interface - see also notes around the add form and edit form
-    # below.
-
-    # some_field = schema.TextLine(title=_(u"Some field"),
-    #                              description=_(u"A field to use"),
-    #                              required=True)
-
-
 class Assignment(base.Assignment):
     """Portlet assignment.
 
@@ -57,25 +51,6 @@ class Assignment(base.Assignment):
     """
 
     implements(IGroupMailPortlet)
-
-    # TODO: Set default values for the configurable parameters here
-
-    # some_field = u""
-
-    # TODO: Add keyword parameters for configurable parameters here
-    # def __init__(self, some_field=u"):
-    #    self.some_field = some_field
-
-    def __init__(self):
-        pass
-
-    @property
-    def title(self):
-        """This property is used to give the title of the portlet in the
-        "manage portlets" screen.
-        """
-        return "Group Mail"
-
 
 class Renderer(base.Renderer):
     """Portlet renderer.
@@ -90,24 +65,26 @@ class Renderer(base.Renderer):
     def __init__(self, *args):
         base.Renderer.__init__(self, *args)
         context = aq_inner(self.context)
-        self.membership = getToolByName(self.context, 'portal_membership')
+        self.membership = getToolByName(context, 'portal_membership')
 
     @property
     def mail_permission(self):
+        """
+        Check the special mail permission for the groupspace.
+        """
         context = aq_inner(self.context)
         permission = "GrufSpaces: Send Mail to GroupSpace Members"
         return self.membership.checkPermission(permission, context)
 
     @property
     def available(self):
-        return self.mail_permission
-
-    def group_mail(self):
-        context = aq_inner(self.context)
-        return self.roles()
+        """
+        Only make the porlet available when the user has the mail permission.
+        """
+        return self.mail_permission()
 
     @memoize
-    def roles(self):
+    def role_settings(self):
         context = aq_inner(self.context)
         groupspace = self._get_groupspace(context)
         view = getMultiAdapter((groupspace, self.request), name='roles')
@@ -126,30 +103,11 @@ class Renderer(base.Renderer):
             # if the obj is a method we get the class
             obj = getattr(obj, 'im_self', new)
             
-# NOTE: If this portlet does not have any configurable parameters, you can
-# inherit from NullAddForm and remove the form_fields variable.
-
-class AddForm(base.AddForm):
+class AddForm(base.NullAddForm):
     """Portlet add form.
 
     This is registered in configure.zcml. The form_fields variable tells
     zope.formlib which fields to display. The create() method actually
     constructs the assignment that is being added.
-    """
-    form_fields = form.Fields(IGroupMailPortlet)
-
-    def create(self, data):
-        return Assignment(**data)
-
-
-# NOTE: IF this portlet does not have any configurable parameters, you can
-# remove this class definition and delete the editview attribute from the
-# <plone:portlet /> registration in configure.zcml
-
-class EditForm(base.EditForm):
-    """Portlet edit form.
-
-    This is registered with configure.zcml. The form_fields variable tells
-    zope.formlib which fields to display.
     """
     form_fields = form.Fields(IGroupMailPortlet)

@@ -10,7 +10,7 @@ from plone.app.portlets.storage import PortletAssignmentMapping
 
 from groupspace.mail.portlets import groupmailportlet
 from groupspace.mail.tests.base_groupmailportlet import TestCase
-
+from groupspace.roles.interfaces import ILocalGroupSpacePASRoles
 
 class TestPortlet(TestCase):
 
