@@ -7,7 +7,7 @@
 	<!-- -*- extra stuff goes here -*- -->
 
    <portlet
-     addview="groupspace.mail.portlets.GroupMailPortlet"
+     addview="collective.groupspace.mail.portlets.GroupMailPortlet"
      title="Group Mail"
      description="Send mail to selected GroupSpace participants"
    />

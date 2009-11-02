@@ -15,7 +15,7 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from Products.CMFCore.utils import getToolByName
 
-from groupspace.mail import MAIL_MESSAGE_FACTORY as _
+from collective.groupspace.mail import MAIL_MESSAGE_FACTORY as _
 
 from Acquisition import aq_inner
 from Acquisition import aq_parent
@@ -31,7 +31,7 @@ from plone.portlets.interfaces import IPortletContext
 from zope.component import getUtilitiesFor
 
 from Products.GrufSpaces.interface import IRolesPageRole
-from groupspace.roles.interfaces import ILocalGroupSpacePASRoles
+from collective.groupspace.roles.interfaces import ILocalGroupSpacePASRoles
 
 from zope.component import getMultiAdapter
 

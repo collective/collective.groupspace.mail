@@ -1,7 +1,7 @@
 <configure 
     xmlns="http://namespaces.zope.org/zope"
     xmlns:plone="http://namespaces.plone.org/plone"
-    i18n_domain="groupspace.mail">
+    i18n_domain="collective.groupspace.mail">
   <!-- Ensure Plone's portlets ZCML has already been processed; without
        this, we may get a permission lookup error
   -->
@@ -9,7 +9,7 @@
   <!-- -*- extra stuff goes here -*- -->
 
   <plone:portlet
-      name="groupspace.mail.portlets.GroupMailPortlet"
+      name="collective.groupspace.mail.portlets.GroupMailPortlet"
       interface=".groupmailportlet.IGroupMailPortlet"
       assignment=".groupmailportlet.Assignment"
       view_permission="zope2.View"

@@ -8,9 +8,9 @@ from plone.portlets.interfaces import IPortletRenderer
 
 from plone.app.portlets.storage import PortletAssignmentMapping
 
-from groupspace.mail.portlets import groupmailportlet
-from groupspace.mail.tests.base_groupmailportlet import TestCase
-from groupspace.roles.interfaces import ILocalGroupSpacePASRoles
+from collective.groupspace.mail.portlets import groupmailportlet
+from collective.groupspace.mail.tests.base_groupmailportlet import TestCase
+from collective.groupspace.roles.interfaces import ILocalGroupSpacePASRoles
 
 class TestPortlet(TestCase):
 
@@ -18,8 +18,8 @@ class TestPortlet(TestCase):
         self.setRoles(('Manager',))
 
     def test_portlet_type_registered(self):
-        portlet = getUtility(IPortletType, name='groupspace.mail.portlets.GroupMailPortlet')
-        self.assertEquals(portlet.addview, 'groupspace.mail.portlets.GroupMailPortlet')
+        portlet = getUtility(IPortletType, name='collective.groupspace.mail.portlets.GroupMailPortlet')
+        self.assertEquals(portlet.addview, 'collective.groupspace.mail.portlets.GroupMailPortlet')
 
     def test_interfaces(self):
         # TODO: Pass any keywoard arguments to the Assignment constructor
@@ -28,7 +28,7 @@ class TestPortlet(TestCase):
         self.failUnless(IPortletDataProvider.providedBy(portlet.data))
 
     def test_invoke_add_view(self):
-        portlet = getUtility(IPortletType, name='groupspace.mail.portlets.GroupMailPortlet')
+        portlet = getUtility(IPortletType, name='collective.groupspace.mail.portlets.GroupMailPortlet')
         mapping = self.portal.restrictedTraverse('++contextportlets++plone.leftcolumn')
         for m in mapping.keys():
             del mapping[m]

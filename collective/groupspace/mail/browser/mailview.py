@@ -6,7 +6,7 @@ import sys
 from Products.Five import BrowserView
 from Products.CMFCore.utils import getToolByName
 
-from groupspace.mail import MAIL_MESSAGE_FACTORY as _
+from collective.groupspace.mail import MAIL_MESSAGE_FACTORY as _
 
 from plone.app.vocabularies.users import UsersSource
 from plone.app.vocabularies.groups import GroupsSource

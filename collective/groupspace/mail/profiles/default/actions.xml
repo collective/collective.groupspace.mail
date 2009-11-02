@@ -7,7 +7,7 @@
     <property name="description" i18n:translate=""></property>
     <property name="url_expr">string:${object_url}/@@mail</property>
     <property name="icon_expr"></property>
-    <property name="available_expr">python:object.restrictedTraverse('@@plone_interface_info').provides('groupspace.roles.interfaces.ILocalGroupSpacePASRoles')</property>
+    <property name="available_expr">python:object.restrictedTraverse('@@plone_interface_info').provides('collective.groupspace.roles.interfaces.ILocalGroupSpacePASRoles')</property>
     <property name="permissions">
       <element value="GrufSpaces: Send Mail to GroupSpace Members"/>
     </property>
