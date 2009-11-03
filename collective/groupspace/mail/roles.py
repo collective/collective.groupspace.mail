@@ -6,6 +6,11 @@ from Products.CMFCore.utils import getToolByName
 from plone.app.vocabularies.users import UsersSource
 from plone.app.vocabularies.groups import GroupsSource
 
+from collective.groupspace.mail import MAIL_MESSAGE_FACTORY as _
+
+import logging
+logger = logging.getLogger('Plone')
+
 from smtplib import SMTPServerDisconnected
 from smtplib import SMTPSenderRefused
 from smtplib import SMTPRecipientsRefused
@@ -13,6 +18,10 @@ from smtplib import SMTPDataError
 from smtplib import SMTPConnectError
 from smtplib import SMTPHeloError
 from smtplib import SMTPAuthenticationError
+import socket
+from Products.MailHost.MailHost import MailHostError
+
+from Products.statusmessages.interfaces import IStatusMessage
 
 def notify_change(obj, event):
     """
@@ -23,7 +32,14 @@ def notify_change(obj, event):
     if obj.request.has_key('notify_user_assignment'):
         notifications = get_user_notifications(obj, event)
         notifications.update(get_group_notifications(obj, event))
-        send_mail(obj, notifications)
+
+        success, msg = send_mail(obj, notifications)
+
+        status_message = IStatusMessage(obj.request)
+        if success:
+            status_message.addStatusMessage(msg, type='info')
+        else:
+            status_message.addStatusMessage(msg, type='error')
 
 def get_user_notifications(obj, event):
     """
@@ -118,6 +134,8 @@ def send_mail(obj, notification):
 
     host = obj.MailHost
 
+    errors = {}
+
     for info in notification.values():
         old_roles = list(info['old_roles'])
         old_roles.sort()
@@ -130,7 +148,7 @@ def send_mail(obj, notification):
         mail_text = """To: %(to_email)s
 From: %(from_email)s
 Errors-to: %(from_email)s
-Subject: Your roles have change in the GroupSpace "%(content_title)s"
+Subject: Your roles have changed in the GroupSpace "%(content_title)s"
 Content-Type: text/plain; charset=%(default_charset)s
 Content-Transfer-Encoding: 8bit
 
@@ -148,17 +166,25 @@ Before the change, you had the following roles in the group:
 """ % variables
         try:
             host.send(mail_text)
-        except SMTPServerDisconnected:
+        except (SMTPServerDisconnected,
+                SMTPSenderRefused,
+                SMTPRecipientsRefused,
+                SMTPDataError,
+                SMTPConnectError,
+                SMTPHeloError,
+                SMTPAuthenticationError,
+                socket.error,
+                MailHostError), e:
+            logger.error("collective.groupspace.mail error: %s", e, exc_info=1)
+            errors[str(e)] = True
+        except Exception, e:
+            logger.error("collective.groupspace.mail error: %s", e, exc_info=1)
             raise
-        except SMTPSenderRefused:
-            raise
-        except SMTPRecipientsRefused:
-            raise
-        except SMTPDataError:
-            raise
-        except SMTPConnectError:
-            raise
-        except SMTPHeloError:
-            raise
-        except SMTPAuthenticationError:
-            raise
+
+    if errors:
+        return False, _(u"An error occurred while sending the email. %s" % ','.join(errors.keys()))
+    
+    return True, _(u"Notification emails sent.")
+
+
+

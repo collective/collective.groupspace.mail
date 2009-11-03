@@ -26,6 +26,7 @@ from smtplib import SMTPConnectError
 from smtplib import SMTPHeloError
 from smtplib import SMTPAuthenticationError
 import socket
+from Products.MailHost.MailHost import MailHostError
 
 class MailView(BrowserView):
     """
@@ -310,8 +311,8 @@ located at
                 SMTPConnectError,
                 SMTPHeloError,
                 SMTPAuthenticationError,
-                socket.error):
-            exc, e, tb = sys.exc_info()
+                socket.error,
+                MailHostError), e:
             return False, _(u"An error occurred while sending the email. %s" % str(e)) 
         except:
             raise
