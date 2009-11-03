@@ -143,10 +143,10 @@ class MailView(BrowserView):
         Returns unique emails of specific group members or groups
         """
         if user:
-            return self._get_user_mails()
+            return self._get_user_mails(user)
             
         if group:
-            return self._get_group_mails()
+            return self._get_group_mails(group)
 
         is_valid_email = self.portal_registration.isValidEmail 
         context = aq_inner(self.context)        
@@ -223,7 +223,7 @@ class MailView(BrowserView):
                 emails[user] = [user_name, user, user_mail]
             return emails.values()
 
-    def _get_group_mails(self, user):
+    def _get_group_mails(self, group):
         """
         Get the information of the members of the group if the group 
         has local roles.
