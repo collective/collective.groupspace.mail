@@ -143,7 +143,7 @@ class MailView(BrowserView):
         Returns unique emails of specific group members or groups
         """
         if user:
-            return self.get_user_mails()
+            return self._get_user_mails()
             
         if group:
             return self._get_group_mails()
