@@ -87,6 +87,7 @@ class Renderer(base.Renderer):
     def role_settings(self):
         context = aq_inner(self.context)
         groupspace = self._get_groupspace(context)
+        assert(not groupspace is None)
         view = getMultiAdapter((groupspace, self.request), name='roles')
         return view.existing_role_settings()
 

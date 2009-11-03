@@ -1,4 +1,6 @@
-from zope.component import getUtility, getMultiAdapter
+from zope.component import getUtility
+from zope.component import getMultiAdapter
+from zope.interface import alsoProvides
 
 from plone.portlets.interfaces import IPortletType
 from plone.portlets.interfaces import IPortletManager
@@ -34,21 +36,6 @@ class TestPortlet(TestCase):
             del mapping[m]
         addview = mapping.restrictedTraverse('+/' + portlet.addview)
 
-        # TODO: Pass a dictionary containing dummy form inputs from the add form
-        addview.createAndAdd(data={})
-
-        self.assertEquals(len(mapping), 1)
-        self.failUnless(isinstance(mapping.values()[0], groupmailportlet.Assignment))
-
-    # NOTE: This test can be removed if the portlet has no edit form
-    def test_invoke_edit_view(self):
-        mapping = PortletAssignmentMapping()
-        request = self.folder.REQUEST
-
-        mapping['foo'] = groupmailportlet.Assignment()
-        editview = getMultiAdapter((mapping['foo'], request), name='edit')
-        self.failUnless(isinstance(editview, groupmailportlet.EditForm))
-
     def test_obtain_renderer(self):
         context = self.folder
         request = self.folder.REQUEST
@@ -66,6 +53,12 @@ class TestRenderer(TestCase):
 
     def afterSetUp(self):
         self.setRoles(('Manager',))
+        alsoProvides(self.folder, ILocalGroupSpacePASRoles)
+        self.folder.user_roles = None
+        self.folder.group_roles = None
+        self.folder.reindexObject()
+        self.folder.invokeFactory('Document', 'document1')
+        self.document = self.folder.document1
 
     def renderer(self, context=None, request=None, view=None, manager=None, assignment=None):
         context = context or self.folder
@@ -77,13 +70,22 @@ class TestRenderer(TestCase):
         assignment = assignment or groupmailportlet.Assignment()
         return getMultiAdapter((context, request, view, manager, assignment), IPortletRenderer)
 
-    def test_render(self):
-        # TODO: Pass any keywoard arguments to the Assignment constructor
-        r = self.renderer(context=self.portal, assignment=groupmailportlet.Assignment())
+    def test_render_on_groupspace(self):
+        # TODO: Pass any keyword arguments to the Assignment constructor
+        r = self.renderer(context=self.folder, assignment=groupmailportlet.Assignment())
         r = r.__of__(self.folder)
         r.update()
         output = r.render()
         # TODO: Test output
+
+    def test_render_on_content_inside_groupspace(self):
+        # TODO: Pass any keyword arguments to the Assignment constructor
+        r = self.renderer(context=self.document, assignment=groupmailportlet.Assignment())
+        r = r.__of__(self.document)
+        r.update()
+        output = r.render()
+        # TODO: Test output
+
 
 
 def test_suite():
