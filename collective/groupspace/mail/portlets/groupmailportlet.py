@@ -52,6 +52,16 @@ class Assignment(base.Assignment):
 
     implements(IGroupMailPortlet)
 
+    def __init__(self):
+        pass
+
+    @property
+    def title(self):
+        """This property is used to give the title of the portlet in the
+        "manage portlets" screen.
+        """
+        return "Group Mail"
+
 class Renderer(base.Renderer):
     """Portlet renderer.
 
@@ -81,7 +91,7 @@ class Renderer(base.Renderer):
         """
         Only make the porlet available when the user has the mail permission.
         """
-        return self.mail_permission()
+        return self.mail_permission
 
     @memoize
     def role_settings(self):
@@ -111,4 +121,12 @@ class AddForm(base.NullAddForm):
     zope.formlib which fields to display. The create() method actually
     constructs the assignment that is being added.
     """
-    form_fields = form.Fields(IGroupMailPortlet)
+
+    def create(self):
+        """
+        Construct the added assignment.
+        """
+        return Assignment()
+
+
+
