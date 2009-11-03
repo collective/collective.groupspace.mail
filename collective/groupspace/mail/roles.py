@@ -130,19 +130,20 @@ def send_mail(obj, notification):
     if from_email and registration.isValidEmail(from_email):    
         pass
     else:
-        return
+        return False, _(u"Your email address is invalid: %s" % str(from_email))
 
     host = obj.MailHost
 
     errors = {}
 
     for info in notification.values():
+        
         old_roles = list(info['old_roles'])
         old_roles.sort()
         new_roles = list(info['new_roles'])
         old_roles.sort()
-        variables['new_roles'] = ', '.join(new_roles)
-        variables['old_roles'] = ', '.join(old_roles)
+        variables['new_roles'] = str(', '.join(new_roles))
+        variables['old_roles'] = str(', '.join(old_roles))
         variables['to_email'] = info['email']
         
         mail_text = """To: %(to_email)s
