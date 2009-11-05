@@ -30,8 +30,9 @@ from plone.portlets.interfaces import IPortletContext
 
 from zope.component import getUtilitiesFor
 
-from Products.GrufSpaces.interface import IRolesPageRole
+from collective.groupspace.roles.interfaces import IRolesPageRole
 from collective.groupspace.roles.interfaces import ILocalGroupSpacePASRoles
+from collective.groupspace.mail.config import SEND_MAIL_PERMISSION
 
 from zope.component import getMultiAdapter
 
@@ -83,7 +84,7 @@ class Renderer(base.Renderer):
         Check the special mail permission for the groupspace.
         """
         context = aq_inner(self.context)
-        permission = "GrufSpaces: Send Mail to GroupSpace Members"
+        permission = SEND_MAIL_PERMISSION
         return self.membership.checkPermission(permission, context)
 
     @property
