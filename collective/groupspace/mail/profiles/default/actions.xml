@@ -11,7 +11,7 @@
     <property name="icon_expr"></property>
     <property name="available_expr">python:object.restrictedTraverse('@@plone_interface_info').provides('collective.groupspace.roles.interfaces.ILocalGroupSpacePASRoles')</property>
     <property name="permissions">
-      <element value="GrufSpaces: Send Mail to GroupSpace Members"/>
+      <element value="collective.groupspace.mail: Send Mail to Group"/>
     </property>
     <property name="visible">True</property>
    </object>
