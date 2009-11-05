@@ -7,11 +7,6 @@
     <include package=".browser" />
     <include package=".portlets" />
 
-    <permission
-        id="grufspaces.SendMailToGroupSpaceMembers"
-        title="GrufSpaces: Send Mail to GroupSpace Members"
-        />
-
     <subscriber for="collective.groupspace.roles.interfaces.ILocalGroupSpacePASRoles
                      collective.groupspace.roles.interfaces.ILocalGroupSpacePASRolesChangeEvent"
                 handler="collective.groupspace.mail.roles.notify_change"/>
