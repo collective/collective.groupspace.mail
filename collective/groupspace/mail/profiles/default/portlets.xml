@@ -3,13 +3,29 @@
      be used to register completely new column types. See CMFPlone's version
      of this file for more information.
   -->
-<portlets>
-	<!-- -*- extra stuff goes here -*- -->
+<portlets
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    i18n:domain="collective.groupspace.roles">
 
-   <portlet
-     addview="collective.groupspace.mail.portlets.GroupMailPortlet"
-     title="Group Mail"
-     description="Send mail to selected GroupSpace participants"
-   />
+    <!-- -*- extra stuff goes here -*- -->
+
+    <portlet
+        addview="collective.groupspace.mail.portlets.GroupMailPortlet"
+        title="Group Mail"
+        description="A portlet which can render a listing of all participants of a GroupSpace the user can send an email to."
+        i18n:attributes="title title_my_groups_portlet;
+                         description description_my_groups_portlet">
+        <for interface="plone.app.portlets.interfaces.IColumn" />
+        <for interface="plone.app.portlets.interfaces.IDashboard" />
+    </portlet>
+
+    <assignment
+        manager="plone.rightcolumn"
+        category="context"
+        key="/"
+        type="collective.groupspace.mail.portlets.GroupMailPortlet"
+        name="mailtogroupspace"
+    />
 
 </portlets>
+
