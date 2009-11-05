@@ -1,13 +1,8 @@
 <?xml version="1.0"?>
 <rolemap>
   <permissions>
-    <permission name="GrufSpaces: Send Mail to GroupSpace Members"
+    <permission name="collective.groupspace.mail: Send Mail to Group"
                 acquire="True">
-      <role name="Manager"/>
-      <role name="Owner"/>
-      <role name="GroupAdmin"/>
-      <role name="GroupEditor"/>
-      <role name="GroupContributor"/>
     </permission>
   </permissions>
 </rolemap>
