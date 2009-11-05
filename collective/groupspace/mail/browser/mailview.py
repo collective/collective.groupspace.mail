@@ -14,7 +14,7 @@ from plone.app.vocabularies.groups import GroupsSource
 from Acquisition import aq_inner
 from plone.memoize.instance import memoize
 from zope.component import getUtilitiesFor
-from Products.GrufSpaces.interface import IRolesPageRole
+from collective.groupspace.roles.interfaces import IRolesPageRole
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zExceptions import Forbidden
 from Products.statusmessages.interfaces import IStatusMessage
