@@ -75,8 +75,11 @@ class Renderer(base.Renderer):
 
     def __init__(self, *args):
         base.Renderer.__init__(self, *args)
+         
         context = aq_inner(self.context)
         self.membership = getToolByName(context, 'portal_membership')
+        portal_state = getMultiAdapter((context, self.request), name=u'plone_portal_state')
+        self.portal_url = portal_state.portal_url()
 
     @property
     def mail_permission(self):

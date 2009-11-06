@@ -10,8 +10,9 @@
            href=""
            tal:attributes="href string:@@mail"
            i18n:translate="box_group_mail">
-            <img src="mail_icon.gif"
-                 alt=""/>
+            <img src=""
+                 alt=""
+                 tal:attributes="src string:${view/portal_url}/mail_icon.gif"/>
             Email to Group
         </a>
         <span class="portletTopRight"></span>
@@ -25,7 +26,7 @@
            tal:attributes="href python:'@@mail?' + principal['type'] + '=' + principal['id'];">
             <img src=""
                  alt="" 
-                 tal:attributes="src python:principal['type'] + '.gif'" />           
+                 tal:attributes="src string:${view/portal_url}/${principal/type}.gif" />           
             <span tal:content="principal/title">
                 sampleparticipant
             </span>
