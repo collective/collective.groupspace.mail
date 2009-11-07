@@ -36,6 +36,9 @@ from collective.groupspace.mail.config import SEND_MAIL_PERMISSION
 
 from zope.component import getMultiAdapter
 
+from plone.app.vocabularies.users import UsersSource
+from plone.app.vocabularies.groups import GroupsSource
+
 class IGroupMailPortlet(IPortletDataProvider):
     """A portlet
 
@@ -102,8 +105,91 @@ class Renderer(base.Renderer):
         context = aq_inner(self.context)
         groupspace = self._get_groupspace(context)
         assert(not groupspace is None)
-        view = getMultiAdapter((groupspace, self.request), name='roles')
-        return view.existing_role_settings()
+        return self.existing_role_settings()
+
+    # View    
+    @memoize
+    def roles(self):
+        """Get a list of roles that can be managed.
+        
+        Returns a list of dicts with keys:
+        
+            - id
+            - title
+        """
+        context = aq_inner(self.context)
+        portal_membership = getToolByName(context, 'portal_membership')
+
+        pairs = []
+
+        for name, utility in getUtilitiesFor(IRolesPageRole):
+            pairs.append(dict(id = name, title = utility.title))
+
+        pairs.sort(key=lambda x: x["id"])
+        return pairs
+
+    @memoize
+    def existing_role_settings(self):
+        """Get current settings for users and groups that have already got
+        at least one of the managed roles.
+
+        Returns a list of dicts as per role_settings()
+        """
+        context = aq_inner(self.context)
+
+        # Compile a list of user and group information with their roles
+        info = []
+
+        # Only accept known roles in the result list
+        knownroles = self.roles()
+
+        if context.user_roles:
+            userssource = UsersSource(context)
+            for user_id, user_roles in context.user_roles.items():
+                # Fetch the user and compile the existing role settings
+                user = userssource.get(user_id)
+                if user is None:
+                    continue
+                roles = {}
+                for role in knownroles:
+                    # Only return information on any known roles
+                    if role['id'] in user_roles:
+                        roles[role['id']] = True
+                    else:
+                        roles[role['id']] = False
+                if roles:
+                    # Only add the user info if he has any role
+                    info.append({'type': 'user',
+                                 'id': user_id,
+                                 'title': user.getProperty('fullname', None) or user.getId(),
+                                 'roles': roles,
+                            })
+
+        if context.group_roles:
+            groupssource = GroupsSource(context)
+            for group_id, group_roles in context.group_roles.items():
+                # Fetch the group and compile the existing role settings
+                group = groupssource.get(group_id)
+                if group is None:
+                    continue
+                roles = {}
+                for role in knownroles:
+                    # Only return information on any known roles
+                    if role['id'] in group_roles:
+                        roles[role['id']] = True
+                    else:
+                        roles[role['id']] = False
+                if roles:
+                    # Only add the group info if it has any role
+                    info.append({'type': 'group',
+                                 'id': group_id,
+                                 'title': group.getProperty('title', None) or group.getId(),
+                                 'roles': roles,
+                                })
+
+        return info
+
+
 
     def _get_groupspace(self, object):
         for obj in self._parent_chain(object):
