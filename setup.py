@@ -21,7 +21,7 @@ tests_require=['zope.testing']
 
 setup(name='collective.groupspace.mail',
     version=version ,
-    description="Mail service for the GroupSpace content type",
+    description="Plone mail service for collective.groupspace content types",
     long_description=long_description,
     classifiers=[
       "Development Status :: 4 - Beta",
