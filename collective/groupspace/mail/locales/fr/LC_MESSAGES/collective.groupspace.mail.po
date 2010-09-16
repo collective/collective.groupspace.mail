@@ -1,0 +1,114 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: AESCM Configuration 1.0\n"
+"POT-Creation-Date: 2010-09-16 09:13+0000\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: Quadra Informatique <plone@quadra-informatique.fr>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: fr\n"
+"X-Poedit-Country: FRANCE\n"
+
+#: collective.groupspace.mail/collective/groupspace/mail/browser/mailview.py:316
+msgid "An error occurred while sending the email. %s"
+msgstr "Une erreur est survenue durant l'envoi du courriel. %s"
+
+#: collective.groupspace.mail/collective/groupspace/mail/roles.py:187
+msgid "An error occurred while sending the email. %s,"
+msgstr "Une erreur est survenue durant l'envoi du courriel. %s,"
+
+#: collective.groupspace.mail/collective/groupspace/mail/browser/mailview.py:319
+msgid "Emails sent."
+msgstr "Courriels envoyés."
+
+#: collective.groupspace.mail/collective/groupspace/mail/roles.py:189
+msgid "Notification emails sent."
+msgstr "Courriels de notification envoyés."
+
+#: collective.groupspace.mail/collective/groupspace/mail/browser/mailview.py:110
+msgid "Please correct the indicated errors."
+msgstr "Veuillez corriger les erreurs indiquées."
+
+#: collective.groupspace.mail/collective/groupspace/mail/browser/mailview.py:91
+msgid "Please enter a valid email address."
+msgstr "Veuillez entrer une adresse courriel valide."
+
+#: collective.groupspace.mail/collective/groupspace/mail/browser/mailview.py:83
+msgid "Please fill in a message."
+msgstr "veuillez entrer un message."
+
+#: collective.groupspace.mail/collective/groupspace/mail/browser/mailview.py:87
+msgid "Select at least one recipient."
+msgstr "Sélectionnez au moins un destinataire."
+
+#: collective.groupspace.mail/collective/groupspace/mail/roles.py:134
+msgid "Your email address is invalid: %s"
+msgstr "Votre adresse courriel est invalide: %s"
+
+#. Default: "${box_group_mail_pict} Email to Group"
+#: collective.groupspace.mail/collective/groupspace/mail/portlets/groupmailportlet.pt:14
+msgid "box_group_mail"
+msgstr "${box_group_mail_pict} Courriel au groupe"
+
+#. Default: "Send an email to the group"
+#: collective.groupspace.mail/collective/groupspace/mail/browser/mailview.pt:22
+msgid "heading_send_email_to_group"
+msgstr "Envoyer un courriel au groupe"
+
+#. Default: "The Email message."
+#: collective.groupspace.mail/collective/groupspace/mail/browser/mailview.pt:113
+msgid "help_message"
+msgstr "Le message du courriel."
+
+#. Default: "Your email address."
+#: collective.groupspace.mail/collective/groupspace/mail/browser/mailview.pt:92
+msgid "help_send_from"
+msgstr "Votre adresse courriel."
+
+#. Default: "Message"
+#: collective.groupspace.mail/collective/groupspace/mail/browser/mailview.pt:111
+msgid "label_message"
+msgstr "Message"
+
+#. Default: "(Required)"
+#: collective.groupspace.mail/collective/groupspace/mail/browser/mailview.pt:58
+msgid "label_required"
+msgstr "(Requis)"
+
+#. Default: "Send"
+#: collective.groupspace.mail/collective/groupspace/mail/browser/mailview.pt:132
+msgid "label_send"
+msgstr "Envoyer"
+
+#. Default: "From"
+#: collective.groupspace.mail/collective/groupspace/mail/browser/mailview.pt:86
+msgid "label_send_from"
+msgstr "De"
+
+#. Default: "Send to"
+#: collective.groupspace.mail/collective/groupspace/mail/browser/mailview.pt:56
+msgid "label_send_to_members"
+msgstr "Envoyer à"
+
+#. Default: "Address info"
+#: collective.groupspace.mail/collective/groupspace/mail/browser/mailview.pt:50
+msgid "legend_address_info"
+msgstr "Informations d'adresse"
+
+#. Default: "You need to set your email address in the preferences in order to send messages."
+#: collective.groupspace.mail/collective/groupspace/mail/browser/mailview.pt:34
+msgid "no_email_in_preferences"
+msgstr "Vous devez définir votre adresse courriel dans vos préférences pour envoyer des messages."
+
+#. Default: "No email addresses found!"
+#: collective.groupspace.mail/collective/groupspace/mail/browser/mailview.pt:27
+msgid "no_emails_found"
+msgstr "Aucune adresse courriel trouvée."
+
+#. Default: "Required"
+#: collective.groupspace.mail/collective/groupspace/mail/browser/mailview.pt:58
+msgid "title_required"
+msgstr "Requis"
+

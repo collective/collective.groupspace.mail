@@ -2,7 +2,8 @@
     xmlns="http://www.w3.org/1999/xhtml"
     xmlns:tal="http://xml.zope.org/namespaces/tal"
     xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-    i18n:domain="collective.groupspace.mail">
+    i18n:domain="collective.groupspace.mail"
+    tal:condition="view/role_settings">
 
     <dt class="portletHeader">
         <span class="portletTopLeft"></span>
@@ -12,7 +13,7 @@
            i18n:translate="box_group_mail">
             <img src=""
                  alt=""
-                 tal:attributes="src string:${view/portal_url}/mail_icon.gif"/>
+                 tal:attributes="src string:${view/portal_url}/mail_icon.gif" i18n:name="box_group_mail_pict"/>
             Email to Group
         </a>
         <span class="portletTopRight"></span>

@@ -29,7 +29,8 @@ def notify_change(obj, event):
     Roles can be changed for several members at the same time
     """
     # The roles view has a notify_user_assignment checkbox        
-    if obj.request.has_key('notify_user_assignment'):
+    request = getattr(obj,'REQUEST',{})
+    if request.has_key('notify_user_assignment'):
         notifications = get_user_notifications(obj, event)
         notifications.update(get_group_notifications(obj, event))
 
