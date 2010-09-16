@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: AESCM Configuration 1.0\n"
-"POT-Creation-Date: 2010-09-16 09:13+0000\n"
+"POT-Creation-Date: 2010-09-16 13:28+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: Quadra Informatique <plone@quadra-informatique.fr>\n"
@@ -47,10 +47,10 @@ msgstr "Sélectionnez au moins un destinataire."
 msgid "Your email address is invalid: %s"
 msgstr "Votre adresse courriel est invalide: %s"
 
-#. Default: "${box_group_mail_pict} Email to Group"
-#: collective.groupspace.mail/collective/groupspace/mail/portlets/groupmailportlet.pt:14
+#. Default: "Email to Group"
+#: collective.groupspace.mail/collective/groupspace/mail/portlets/groupmailportlet.pt:16
 msgid "box_group_mail"
-msgstr "${box_group_mail_pict} Courriel au groupe"
+msgstr "Courriel au groupe"
 
 #. Default: "Send an email to the group"
 #: collective.groupspace.mail/collective/groupspace/mail/browser/mailview.pt:22

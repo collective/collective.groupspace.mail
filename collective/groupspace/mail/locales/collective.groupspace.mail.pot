@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2010-09-16 09:13+0000\n"
+"POT-Creation-Date: 2010-09-16 13:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -53,8 +53,8 @@ msgstr ""
 msgid "Your email address is invalid: %s"
 msgstr ""
 
-#. Default: "${box_group_mail_pict} Email to Group"
-#: collective.groupspace.mail/collective/groupspace/mail/portlets/groupmailportlet.pt:14
+#. Default: "Email to Group"
+#: collective.groupspace.mail/collective/groupspace/mail/portlets/groupmailportlet.pt:16
 msgid "box_group_mail"
 msgstr ""
 

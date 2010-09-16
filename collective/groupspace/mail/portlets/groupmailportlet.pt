@@ -9,12 +9,11 @@
         <span class="portletTopLeft"></span>
         <a class="tile"
            href=""
-           tal:attributes="href string:@@mail"
-           i18n:translate="box_group_mail">
+           tal:attributes="href string:@@mail">
             <img src=""
                  alt=""
-                 tal:attributes="src string:${view/portal_url}/mail_icon.gif" i18n:name="box_group_mail_pict"/>
-            Email to Group
+                 tal:attributes="src string:${view/portal_url}/mail_icon.gif"/>
+            <span i18n:translate="box_group_mail">Email to Group</span>
         </a>
         <span class="portletTopRight"></span>
     </dt>
