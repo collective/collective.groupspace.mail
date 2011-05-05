@@ -59,7 +59,7 @@
                   i18n:attributes="title title_required;"
                   i18n:translate="label_required">(Required)</span>
 
-                  <div class="formHelp" i18n:translate="label_send_to_members">
+                  <div class="formHelp" i18n:translate="help_send_to_members">
                      This mail is sent to the following members of the group
                   </div>
 

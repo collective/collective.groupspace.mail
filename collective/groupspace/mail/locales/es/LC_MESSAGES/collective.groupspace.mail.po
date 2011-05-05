@@ -1,72 +1,70 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: AESCM Configuration 1.0\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "POT-Creation-Date: 2011-05-05 15:29+0000\n"
-"PO-Revision-Date: \n"
-"Last-Translator: \n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0\n"
 "Preferred-Encodings: utf-8 latin1\n"
-"X-Poedit-Language: fr\n"
-"X-Poedit-Country: FRANCE\n"
 
 #: ./browser/mailview.py:316
 msgid "An error occurred while sending the email. %s"
-msgstr "Une erreur est survenue durant l'envoi du courriel. %s"
+msgstr ""
 
 #: ./roles.py:187
 msgid "An error occurred while sending the email. %s,"
-msgstr "Une erreur est survenue durant l'envoi du courriel. %s,"
+msgstr ""
 
 #: ./browser/mailview.py:319
 msgid "Emails sent."
-msgstr "Courriels envoyés."
+msgstr ""
 
 #: ./roles.py:189
 msgid "Notification emails sent."
-msgstr "Courriels de notification envoyés."
+msgstr ""
 
 #: ./browser/mailview.py:110
 msgid "Please correct the indicated errors."
-msgstr "Veuillez corriger les erreurs indiquées."
+msgstr ""
 
 #: ./browser/mailview.py:91
 msgid "Please enter a valid email address."
-msgstr "Veuillez entrer une adresse courriel valide."
+msgstr ""
 
 #: ./browser/mailview.py:83
 msgid "Please fill in a message."
-msgstr "veuillez entrer un message."
+msgstr ""
 
 #: ./browser/mailview.py:87
 msgid "Select at least one recipient."
-msgstr "Sélectionnez au moins un destinataire."
+msgstr ""
 
 #: ./roles.py:134
 msgid "Your email address is invalid: %s"
-msgstr "Votre adresse courriel est invalide: %s"
+msgstr ""
 
 #. Default: "Email to Group"
 #: ./portlets/groupmailportlet.pt:16
 msgid "box_group_mail"
-msgstr "Courriel au groupe"
+msgstr ""
 
 #. Default: "Send an email to the group"
 #: ./browser/mailview.pt:22
 msgid "heading_send_email_to_group"
-msgstr "Envoyer un courriel au groupe"
+msgstr ""
 
 #. Default: "The Email message."
 #: ./browser/mailview.pt:113
 msgid "help_message"
-msgstr "Le message du courriel."
+msgstr ""
 
 #. Default: "Your email address."
 #: ./browser/mailview.pt:92
 msgid "help_send_from"
-msgstr "Votre adresse courriel."
+msgstr ""
 
 #. Default: "This mail is sent to the following members of the group"
 #: ./browser/mailview.pt:62
@@ -76,42 +74,42 @@ msgstr ""
 #. Default: "Message"
 #: ./browser/mailview.pt:111
 msgid "label_message"
-msgstr "Message"
+msgstr ""
 
 #. Default: "(Required)"
 #: ./browser/mailview.pt:58
 msgid "label_required"
-msgstr "(Requis)"
+msgstr ""
 
 #. Default: "Send"
 #: ./browser/mailview.pt:132
 msgid "label_send"
-msgstr "Envoyer"
+msgstr ""
 
 #. Default: "From"
 #: ./browser/mailview.pt:86
 msgid "label_send_from"
-msgstr "De"
+msgstr ""
 
 #. Default: "Send to"
 #: ./browser/mailview.pt:56
 msgid "label_send_to_members"
-msgstr "Envoyer à"
+msgstr ""
 
 #. Default: "Address info"
 #: ./browser/mailview.pt:50
 msgid "legend_address_info"
-msgstr "Informations d'adresse"
+msgstr ""
 
 #. Default: "You need to set your email address in the preferences in order to send messages."
 #: ./browser/mailview.pt:34
 msgid "no_email_in_preferences"
-msgstr "Vous devez définir votre adresse courriel dans vos préférences pour envoyer des messages."
+msgstr ""
 
 #. Default: "No email addresses found!"
 #: ./browser/mailview.pt:27
 msgid "no_emails_found"
-msgstr "Aucune adresse courriel trouvée."
+msgstr ""
 
 #. Default: "To: %(to_email)s\nFrom: %(from_email)s\nErrors-to: %(from_email)s\nSubject: Your roles have changed in the GroupSpace \"%(content_title)s\"\nContent-Type: text/plain; charset=%(default_charset)s\nContent-Transfer-Encoding: 8bit\n\nYou now have the following roles in the group \"%(content_title)s\":\n\n%(new_roles)s\n\nlocated at \n\n%(content_url)s\n\nBefore the change, you had the following roles in the group:\n\n%(old_roles)s\n"
 #: ./roles.py:150
@@ -121,5 +119,5 @@ msgstr ""
 #. Default: "Required"
 #: ./browser/mailview.pt:58
 msgid "title_required"
-msgstr "Requis"
+msgstr ""
 

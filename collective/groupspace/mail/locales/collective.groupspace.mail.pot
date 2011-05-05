@@ -1,10 +1,7 @@
-# --- PLEASE EDIT THE LINES BELOW CORRECTLY ---
-# SOME DESCRIPTIVE TITLE.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2010-09-16 13:28+0000\n"
+"POT-Creation-Date: 2011-05-05 15:29+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,106 +12,116 @@ msgstr ""
 "Language-Code: en\n"
 "Language-Name: English\n"
 "Preferred-Encodings: utf-8 latin1\n"
-"Domain: collective.groupspace.mail\n"
+"Domain: DOMAIN\n"
 
-#: collective.groupspace.mail/collective/groupspace/mail/browser/mailview.py:316
+#: ./browser/mailview.py:316
 msgid "An error occurred while sending the email. %s"
 msgstr ""
 
-#: collective.groupspace.mail/collective/groupspace/mail/roles.py:187
+#: ./roles.py:187
 msgid "An error occurred while sending the email. %s,"
 msgstr ""
 
-#: collective.groupspace.mail/collective/groupspace/mail/browser/mailview.py:319
+#: ./browser/mailview.py:319
 msgid "Emails sent."
 msgstr ""
 
-#: collective.groupspace.mail/collective/groupspace/mail/roles.py:189
+#: ./roles.py:189
 msgid "Notification emails sent."
 msgstr ""
 
-#: collective.groupspace.mail/collective/groupspace/mail/browser/mailview.py:110
+#: ./browser/mailview.py:110
 msgid "Please correct the indicated errors."
 msgstr ""
 
-#: collective.groupspace.mail/collective/groupspace/mail/browser/mailview.py:91
+#: ./browser/mailview.py:91
 msgid "Please enter a valid email address."
 msgstr ""
 
-#: collective.groupspace.mail/collective/groupspace/mail/browser/mailview.py:83
+#: ./browser/mailview.py:83
 msgid "Please fill in a message."
 msgstr ""
 
-#: collective.groupspace.mail/collective/groupspace/mail/browser/mailview.py:87
+#: ./browser/mailview.py:87
 msgid "Select at least one recipient."
 msgstr ""
 
-#: collective.groupspace.mail/collective/groupspace/mail/roles.py:134
+#: ./roles.py:134
 msgid "Your email address is invalid: %s"
 msgstr ""
 
 #. Default: "Email to Group"
-#: collective.groupspace.mail/collective/groupspace/mail/portlets/groupmailportlet.pt:16
+#: ./portlets/groupmailportlet.pt:16
 msgid "box_group_mail"
 msgstr ""
 
 #. Default: "Send an email to the group"
-#: collective.groupspace.mail/collective/groupspace/mail/browser/mailview.pt:22
+#: ./browser/mailview.pt:22
 msgid "heading_send_email_to_group"
 msgstr ""
 
 #. Default: "The Email message."
-#: collective.groupspace.mail/collective/groupspace/mail/browser/mailview.pt:113
+#: ./browser/mailview.pt:113
 msgid "help_message"
 msgstr ""
 
 #. Default: "Your email address."
-#: collective.groupspace.mail/collective/groupspace/mail/browser/mailview.pt:92
+#: ./browser/mailview.pt:92
 msgid "help_send_from"
 msgstr ""
 
+#. Default: "This mail is sent to the following members of the group"
+#: ./browser/mailview.pt:62
+msgid "help_send_to_members"
+msgstr ""
+
 #. Default: "Message"
-#: collective.groupspace.mail/collective/groupspace/mail/browser/mailview.pt:111
+#: ./browser/mailview.pt:111
 msgid "label_message"
 msgstr ""
 
 #. Default: "(Required)"
-#: collective.groupspace.mail/collective/groupspace/mail/browser/mailview.pt:58
+#: ./browser/mailview.pt:58
 msgid "label_required"
 msgstr ""
 
 #. Default: "Send"
-#: collective.groupspace.mail/collective/groupspace/mail/browser/mailview.pt:132
+#: ./browser/mailview.pt:132
 msgid "label_send"
 msgstr ""
 
 #. Default: "From"
-#: collective.groupspace.mail/collective/groupspace/mail/browser/mailview.pt:86
+#: ./browser/mailview.pt:86
 msgid "label_send_from"
 msgstr ""
 
 #. Default: "Send to"
-#: collective.groupspace.mail/collective/groupspace/mail/browser/mailview.pt:56
+#: ./browser/mailview.pt:56
 msgid "label_send_to_members"
 msgstr ""
 
 #. Default: "Address info"
-#: collective.groupspace.mail/collective/groupspace/mail/browser/mailview.pt:50
+#: ./browser/mailview.pt:50
 msgid "legend_address_info"
 msgstr ""
 
 #. Default: "You need to set your email address in the preferences in order to send messages."
-#: collective.groupspace.mail/collective/groupspace/mail/browser/mailview.pt:34
+#: ./browser/mailview.pt:34
 msgid "no_email_in_preferences"
 msgstr ""
 
 #. Default: "No email addresses found!"
-#: collective.groupspace.mail/collective/groupspace/mail/browser/mailview.pt:27
+#: ./browser/mailview.pt:27
 msgid "no_emails_found"
 msgstr ""
 
+#. Default: "To: %(to_email)s\nFrom: %(from_email)s\nErrors-to: %(from_email)s\nSubject: Your roles have changed in the GroupSpace \"%(content_title)s\"\nContent-Type: text/plain; charset=%(default_charset)s\nContent-Transfer-Encoding: 8bit\n\nYou now have the following roles in the group \"%(content_title)s\":\n\n%(new_roles)s\n\nlocated at \n\n%(content_url)s\n\nBefore the change, you had the following roles in the group:\n\n%(old_roles)s\n"
+#: ./roles.py:150
+msgid "notification_email"
+msgstr ""
+
 #. Default: "Required"
-#: collective.groupspace.mail/collective/groupspace/mail/browser/mailview.pt:58
+#: ./browser/mailview.pt:58
 msgid "title_required"
 msgstr ""
 

@@ -147,7 +147,7 @@ def send_mail(obj, notification):
         variables['old_roles'] = str(', '.join(old_roles))
         variables['to_email'] = info['email']
         
-        mail_text = """To: %(to_email)s
+        mail_text = _('notification_email', default="""To: %(to_email)s
 From: %(from_email)s
 Errors-to: %(from_email)s
 Subject: Your roles have changed in the GroupSpace "%(content_title)s"
@@ -165,7 +165,7 @@ located at
 Before the change, you had the following roles in the group:
 
 %(old_roles)s
-""" % variables
+""") % variables
         try:
             host.send(mail_text)
         except (SMTPServerDisconnected,
