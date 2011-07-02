@@ -1,3 +1,25 @@
+1.0.1 (2011-07-02)
+==================
+
+Features
+--------
+
+- Added FR translations. (jstegle)
+
+- spanish translation (enriquepablo)
+
+- get request from event rather than from object
+
+Bug Fixes
+---------
+
+- Changed roles.py for Plone 4.0 Compatibility (there was an AttributeError on context.request) (jstegle)
+
+- Translation of groupmail portlet title wasn't working correctly. (jstegle)
+
+- ignore `.egg-info` to not make `mr.developer` think of dirty packages too much (witsch)
+
+
 1.0 (2009-10-28)
 ================
 
