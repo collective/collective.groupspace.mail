@@ -9,7 +9,7 @@ from setuptools import find_packages
 def read(*rnames):
     return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
 
-version  = '1.0'
+version  = '1.0.1'
 
 long_description = (
     read('README.txt')
@@ -24,7 +24,7 @@ setup(name='collective.groupspace.mail',
     description="Plone collective.groupspace mail service for contacting other participants",
     long_description=long_description,
     classifiers=[
-      "Development Status :: 4 - Beta",
+      "Development Status :: 5 - Production/Stable",
       "Environment :: Web Environment",
       "Framework :: Plone",
       "Framework :: Zope2",
