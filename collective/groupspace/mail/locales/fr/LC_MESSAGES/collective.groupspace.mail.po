@@ -71,7 +71,7 @@ msgstr "Votre adresse courriel."
 #. Default: "This mail is sent to the following members of the group"
 #: ./browser/mailview.pt:62
 msgid "help_send_to_members"
-msgstr ""
+msgstr "Cet e-mail est envoyé aux membres du groupe suivants"
 
 #. Default: "Message"
 #: ./browser/mailview.pt:111

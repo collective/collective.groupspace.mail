@@ -15,7 +15,7 @@
          tal:define="role python:request.get('role','');
                      user python:request.get('user','');
                      group python:request.get('group','');
-		     member context/@@plone_portal_state/member;
+                     member context/@@plone_portal_state/member;
                      email python:request.get('send_from_address', member.getProperty('email',''));
                      mails python:view.get_mails(role=role, user=user, group=group);
                      send_to_members python:request.get('send_to_members', [])">
