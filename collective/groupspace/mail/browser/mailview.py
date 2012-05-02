@@ -1,23 +1,25 @@
 """
 View for sending mail to a groupspace
 """
-import sys
+import sys, socket
+
+from Acquisition import aq_inner
+
+from collective.groupspace.mail import MAIL_MESSAGE_FACTORY as _
+from collective.groupspace.roles.interfaces import IRolesPageRole
 
 from Products.Five import BrowserView
 from Products.CMFCore.utils import getToolByName
-
-from collective.groupspace.mail import MAIL_MESSAGE_FACTORY as _
+from Products.CMFPlone.utils import safe_unicode
+from Products.validation.i18n import recursiveTranslate
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from Products.statusmessages.interfaces import IStatusMessage
+from Products.MailHost.MailHost import MailHostError
 
 from plone.app.vocabularies.users import UsersSource
 from plone.app.vocabularies.groups import GroupsSource
-
-from Acquisition import aq_inner
 from plone.memoize.instance import memoize
-from zope.component import getUtilitiesFor
-from collective.groupspace.roles.interfaces import IRolesPageRole
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from zExceptions import Forbidden
-from Products.statusmessages.interfaces import IStatusMessage
+
 from smtplib import SMTPServerDisconnected
 from smtplib import SMTPSenderRefused
 from smtplib import SMTPRecipientsRefused
@@ -25,8 +27,10 @@ from smtplib import SMTPDataError
 from smtplib import SMTPConnectError
 from smtplib import SMTPHeloError
 from smtplib import SMTPAuthenticationError
-import socket
-from Products.MailHost.MailHost import MailHostError
+
+from zExceptions import Forbidden
+
+from zope.component import getUtilitiesFor
 
 class MailView(BrowserView):
     """
@@ -269,41 +273,27 @@ class MailView(BrowserView):
                 to_emails.append(user_email)
                           
         member  = self.portal_membership.getAuthenticatedMember()
-        from_name = member.getProperty('fullname', member.getId())
+        from_name = member.getProperty('fullname', '') != '' and member.getProperty('fullname') or member.getId()
 
-        variables = {'content_title'  : context.Title(),
-                     'content_url'    : context.absolute_url(),
-                     'from_email'     : send_from_address,
-                     'from_name'      : from_name,
-                     'to_emails'      : ','.join(to_emails),
-                     'default_charset': encoding,
-                     'message'        : message,
-                    }
-                          
-        mail_text = """To: %(to_emails)s
-From: %(from_email)s
-Errors-to: %(from_email)s
-Subject: Message to the group "%(content_title)s"
-Content-Type: text/plain; charset=%(default_charset)s
-Content-Transfer-Encoding: 8bit
+        kw = {}
+        kw['REQUEST'] = self.request
 
-The following message has been written by 
+        untranslated = _(u"""The following message has been written by ${from_name} to the group ${content_title} located at ${content_url}:\n${message}""", 
+                          mapping = {'from_name' : from_name, 'content_title' : context.Title(), 'content_url' : context.absolute_url(), 'message' : message}
+                        )
 
-    %(from_name)s
+        msg = recursiveTranslate(untranslated, **kw)
 
-to the group 
+        subject = recursiveTranslate(_(u"""Message to the group \"${content_title}\" """, mapping = {'content_title' : context.Title()}), **kw)
 
-    %(content_title)s
-
-located at 
-
-    %(content_url)s
-
-%(message)s
-    """ % variables
-    
         try:
-            host.send(mail_text)
+            host.send(
+                safe_unicode(msg),
+                mto=to_emails,
+                mfrom=send_from_address,
+                subject=safe_unicode(subject),
+                charset=encoding)
+
         except (SMTPServerDisconnected,
                 SMTPSenderRefused,
                 SMTPRecipientsRefused,

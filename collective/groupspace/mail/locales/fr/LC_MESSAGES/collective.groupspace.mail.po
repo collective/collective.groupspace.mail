@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: AESCM Configuration 1.0\n"
 "POT-Creation-Date: 2011-05-05 15:29+0000\n"
 "PO-Revision-Date: \n"
-"Last-Translator: \n"
+"Last-Translator: Julien Stegle <julien.stegle@quadra-informatique.fr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -11,6 +11,7 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "X-Poedit-Language: fr\n"
 "X-Poedit-Country: FRANCE\n"
+"Language-Team: \n"
 
 #: ./browser/mailview.py:316
 msgid "An error occurred while sending the email. %s"
@@ -113,13 +114,22 @@ msgstr "Vous devez définir votre adresse courriel dans vos préférences pour e
 msgid "no_emails_found"
 msgstr "Aucune adresse courriel trouvée."
 
-#. Default: "To: %(to_email)s\nFrom: %(from_email)s\nErrors-to: %(from_email)s\nSubject: Your roles have changed in the GroupSpace \"%(content_title)s\"\nContent-Type: text/plain; charset=%(default_charset)s\nContent-Transfer-Encoding: 8bit\n\nYou now have the following roles in the group \"%(content_title)s\":\n\n%(new_roles)s\n\nlocated at \n\n%(content_url)s\n\nBefore the change, you had the following roles in the group:\n\n%(old_roles)s\n"
-#: ./roles.py:150
-msgid "notification_email"
-msgstr ""
-
 #. Default: "Required"
 #: ./browser/mailview.pt:58
 msgid "title_required"
 msgstr "Requis"
+
+#: collective.groupspace.mail/collective/groupspace/mail/browser/mailview.py:280
+msgid "The following message has been written by ${from_name} to the group ${content_title} located at ${content_url}:\n${message}"
+msgstr "Le message suivant a été écrit par ${from_name} pour le groupe de travail ${content_title} accessible via l'url suivante ${content_url}:\n${message}"
+
+#: collective.groupspace.mail/collective/groupspace/mail/browser/mailview.py:295
+msgid "Message to the group \"${content_title}\" "
+msgstr "Message au groupe de travail \"${content_title}\" "
+
+msgid "Your roles have changed in the GroupSpace ${content_title}"
+msgstr "Vous rôles ont été modifié pour le groupe de travail \"${content_title}\""
+
+msgid "You now have the following roles in the group \"${content_title}\":\n\t${new_roles}\nlocated at\n${content_url}\nBefore the change, you had the following roles in the group:\n\t${old_roles}"
+msgstr "Vous avez maintenant les rôles suivants pour le groupe de travail \"${content_title}\":\n\t${new_roles}\naccessible via l'url\n${content_url}\nVous possédiez les rôles suivants avant la modification:\n\t${old_roles}"
 

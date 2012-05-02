@@ -2,9 +2,13 @@
 Notification about changed roles
 """
 
-from Products.CMFCore.utils import getToolByName
 from plone.app.vocabularies.users import UsersSource
 from plone.app.vocabularies.groups import GroupsSource
+
+from Products.MailHost.MailHost import MailHostError
+from Products.CMFCore.utils import getToolByName
+from Products.validation.i18n import recursiveTranslate
+from Products.statusmessages.interfaces import IStatusMessage
 
 from collective.groupspace.mail import MAIL_MESSAGE_FACTORY as _
 
@@ -18,10 +22,8 @@ from smtplib import SMTPDataError
 from smtplib import SMTPConnectError
 from smtplib import SMTPHeloError
 from smtplib import SMTPAuthenticationError
-import socket
-from Products.MailHost.MailHost import MailHostError
 
-from Products.statusmessages.interfaces import IStatusMessage
+import socket
 
 def notify_change(obj, event):
     """
@@ -120,13 +122,7 @@ def send_mail(obj, notification):
 
     site_props = getToolByName(obj, 'portal_properties').site_properties
     encoding = site_props.getProperty('default_charset', 'UTF-8')
-                
-    variables = {'content_title'  : obj.Title(),
-                 'content_url'    : obj.absolute_url(),
-                 'from_email'     : from_email,
-                 'default_charset': encoding,
-                }
-    
+
     registration = getToolByName(obj, 'portal_registration')
     if from_email and registration.isValidEmail(from_email):    
         pass
@@ -137,37 +133,32 @@ def send_mail(obj, notification):
 
     errors = {}
 
+    kw = {}
+    kw['REQUEST'] = self.request
+
+    subject = recursiveTranslate(_(u'Your roles have changed in the GroupSpace ${content_title}', mapping= {'content_title': obj.Title()}), **kw) 
+
     for info in notification.values():
         
         old_roles = list(info['old_roles'])
         old_roles.sort()
         new_roles = list(info['new_roles'])
         old_roles.sort()
-        variables['new_roles'] = str(', '.join(new_roles))
-        variables['old_roles'] = str(', '.join(old_roles))
-        variables['to_email'] = info['email']
-        
-        mail_text = _('notification_email', default="""To: %(to_email)s
-From: %(from_email)s
-Errors-to: %(from_email)s
-Subject: Your roles have changed in the GroupSpace "%(content_title)s"
-Content-Type: text/plain; charset=%(default_charset)s
-Content-Transfer-Encoding: 8bit
 
-You now have the following roles in the group "%(content_title)s":
+        msg = recursiveTranslate(_(u'You now have the following roles in the group \"${content_title}\":\n\t${new_roles}\nlocated at\n${content_url}\nBefore the change, you had the following roles in the group:\n\t${old_roles}', 
+                                    mapping= {'content_title': obj.Title(), 
+                                              'new_roles' : str(', '.join(new_roles)), 
+                                              'content_url' : obj.absolute_url(), 
+                                              'old_roles' : str(', '.join(old_roles))}),
+                                  **kw)
 
-%(new_roles)s
-
-located at 
-
-%(content_url)s
-
-Before the change, you had the following roles in the group:
-
-%(old_roles)s
-""") % variables
         try:
-            host.send(mail_text)
+            host.send(
+                safe_unicode(msg),
+                mto=info['email'],
+                mfrom=from_email,
+                subject=safe_unicode(subject),
+                charset=encoding)
         except (SMTPServerDisconnected,
                 SMTPSenderRefused,
                 SMTPRecipientsRefused,
